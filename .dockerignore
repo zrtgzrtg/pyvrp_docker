@@ -1,0 +1,6 @@
+X-*
+__pycache__/
+.venv/
+.git/
+.gitignore
+Output_from_docker/
