@@ -1,0 +1,3 @@
+[console_scripts]
+pyvrp=pyvrp.cli:main
+
