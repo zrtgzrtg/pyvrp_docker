@@ -5,7 +5,7 @@ import pyvrp
 from pyvrp import Model
 from pyvrp.stop import MaxIterations
 
-gen = ProblemDataGenerator("A","Synthetic_Full_OD_CostMatrix","X-n101-k25",99)
+gen = ProblemDataGenerator("A","Chicago_100x100_RoadData","X-n101-k25",99)
 gen.doEverything()
 
 model = Model.from_data(gen.problemData)
