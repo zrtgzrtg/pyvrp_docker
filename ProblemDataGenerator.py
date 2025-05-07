@@ -9,8 +9,7 @@ import random
 import pyvrp
 
 class ProblemDataGenerator():
-    def __init__(self,name,distance_matrix_name: str,X_scenario: str,numClients):
-        self.name = name
+    def __init__(self,distance_matrix_name: str,X_scenario: str):
         self.numClients = 99
         self.distance_matrix = None
         self.distance_matrix_raw = None

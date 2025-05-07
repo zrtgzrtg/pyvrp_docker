@@ -4,3 +4,4 @@ __pycache__/
 .git/
 .gitignore
 Output_from_docker/
+output_from_res/
