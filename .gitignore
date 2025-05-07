@@ -5,3 +5,4 @@ Output_from_docker/
 .git
 *Zone.Identifier
 output_from_res/
+*.tar

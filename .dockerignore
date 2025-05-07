@@ -5,3 +5,4 @@ __pycache__/
 .gitignore
 Output_from_docker/
 output_from_res/
+*.tar
