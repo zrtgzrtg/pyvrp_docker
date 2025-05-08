@@ -19,5 +19,5 @@ sudo docker load < pyvrp_docker_uploadable.tar
 
 # Run container in detached mode
 echo "Starting container..."
-sudo docker run -dit --name pyvrp_runner pyvrp_docker_uploadable
+sudo docker run -dit -p 80:80 --name pyvrp_runner pyvrp_docker_uploadable
 

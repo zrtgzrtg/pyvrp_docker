@@ -1,0 +1,68 @@
+<pyvrp._pyvrp.ProblemData object at 0xff4af96497b0>
+PyVRP v0.10.1
+
+Solving an instance with:
+    1 depot
+    99 clients
+    25 vehicles (1 vehicle type)
+
+                  |       Feasible        |      Infeasible
+    Iters    Time |   #      Avg     Best |   #      Avg     Best
+H     500      6s |  45   908464   873480 |  32  1134988   866466
+H    1000     10s |  50   904721   871004 |  29   988978   864923
+
+Search terminated in 10.45s after 1000 iterations.
+Best-found solution has cost 871004.
+
+Solution results
+================
+    # routes: 25
+   # clients: 99
+   objective: 871004
+    distance: 871004
+    duration: 871004
+# iterations: 1000
+    run-time: 10.45 seconds
+
+This is the originial version 
+
+Solution results
+================
+    # routes: 25
+   # clients: 99
+   objective: 871004
+    distance: 871004
+    duration: 871004
+# iterations: 1000
+    run-time: 10.45 seconds
+
+Routes
+------
+Route #1: 90 89 6 25 43 34 76 
+Route #2: 5 87 86 3 
+Route #3: 92 72 24 52 
+Route #4: 98 97 96 23 
+Route #5: 64 65 66 67 68 
+Route #6: 10 13 19 
+Route #7: 30 38 46 37 
+Route #8: 58 54 55 57 
+Route #9: 11 7 85 4 83 
+Route #10: 16 93 
+Route #11: 40 36 35 81 
+Route #12: 95 74 73 91 14 
+Route #13: 48 33 53 
+Route #14: 94 22 18 
+Route #15: 84 60 59 1 
+Route #16: 21 82 8 
+Route #17: 42 78 15 41 
+Route #18: 80 61 69 71 
+Route #19: 56 51 75 
+Route #20: 39 45 47 44 17 62 
+Route #21: 31 88 12 
+Route #22: 29 27 26 28 63 
+Route #23: 77 99 9 
+Route #24: 70 20 2 
+Route #25: 49 50 79 32 
+
+ * Serving Flask app '<run_path>'
+ * Debug mode: on

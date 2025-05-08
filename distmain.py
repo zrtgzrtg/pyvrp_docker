@@ -7,21 +7,39 @@ from pyvrp.stop import MaxIterations
 from flask import jsonify
 from create_data_for_api import DataCreator
 import runpy
+import sys
+import os
+from shared import setResDict
 
-inputs={
-    "dm":"Chicago_100x100_RoadData",
-    "X_set":"X-n101-k25",}
-gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"])
-gen.doEverything()
+def run():
+    print("REACHED RUN")
+    
+    numIterations = 1000
+    numItInput=int(sys.argv[1])
+    if numItInput > 1000:
+        numIterations = numItInput
 
-model = Model.from_data(gen.problemData)
-res = model.solve(stop=MaxIterations(1000))
-print("This is the originial version \n")
-print(res)
+    inputs={
+        "dm":"Chicago_100x100_RoadData",
+        "X_set":"X-n101-k25",}
+    gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"])
+    gen.doEverything()
 
-DataCreator = DataCreator(res,inputs["dm"],inputs["X_set"])
-resDict = DataCreator.runStatistics()
-runpy.run_path("flask_endpoint.py", init_globals={"resDict": resDict})
+    model = Model.from_data(gen.problemData)
+    res = model.solve(stop=MaxIterations(numIterations))
+    print("This is the originial version \n")
+    print(res)
+
+    DataCreator = DataCreator(res,inputs["dm"],inputs["X_set"])
+    resDict = DataCreator.runStatistics()
+    setResDict(resDict)
+
+    #very important
+    #runpy.run_path("flask_endpoint.py", init_globals={"resDict": resDict})
+
+if __name__ == "__main__":
+    print("REACHED MAIN")
+    run()
 
 
 #print("This is the rebuild version!!!!\n\n\n")
