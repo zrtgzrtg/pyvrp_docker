@@ -41,9 +41,9 @@ class Res_Builder():
 
 if __name__ == "__main__":
     inputs={
-        "dm":"Chicago_100x100_RoadData",
-        "X_set":"X-n101-k25",
-        "numClients":"99"
+        "dm":"Munich_DHL_1747x1747_RoadData",
+        "X_set":"X-n1001-k43",
+        "numClients":"1746"
         }
-    resB = Res_Builder(inputs, "example.json")
+    resB = Res_Builder(inputs, "Munich.json")
     print(resB.returnRes())

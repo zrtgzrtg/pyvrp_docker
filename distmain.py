@@ -20,9 +20,9 @@ def run():
         numIterations = numItInput
 
     inputs={
-        "dm":"Chicago_100x100_RoadData",
-        "X_set":"X-n101-k25",
-        "numClients":"99"
+        "dm":"Munich_DHL_1747x1747_RoadData",
+        "X_set":"X-n1001-k43",
+        "numClients":"1746"
         }
     gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
 

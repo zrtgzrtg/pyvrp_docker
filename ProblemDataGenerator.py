@@ -78,12 +78,22 @@ class ProblemDataGenerator():
         raise ValueError(f"Could not extract vehicle count from: {self.X_scenario}")
     
     def createClients(self):
-        demands = self.instance["demand"][1:self.numClients+1]
+        remainingNumClients = self.numClients
         clients = []
-        # x = 0 and y = 0 are placeholders again since we are using distance matrix
-        for demand in demands:
-            client = pyvrp.Client(x=0,y=0, delivery = [demand])
-            clients.append(client)
+        while remainingNumClients > 0:
+            if remainingNumClients > self.instance["dimension"]-1:
+                demands = self.instance["demand"][1:self.instance["dimension"]]
+                # x = 0 and y = 0 are placeholders again since we are using distance matrix
+                for demand in demands:
+                    client = pyvrp.Client(x=0,y=0, delivery = [demand])
+                    clients.append(client)
+                remainingNumClients -= self.instance["dimension"]-1
+            else:
+                demands = self.instance["demand"][1:remainingNumClients+1]
+                for demand in demands:
+                    client = pyvrp.Client(x=0,y=0, delivery= [demand])
+                    clients.append(client)
+                remainingNumClients = remainingNumClients-len(demands)
         self.problemDataList["clients"] = clients
     
     def createEverythingForProblemData(self):
@@ -123,15 +133,17 @@ class ProblemDataGenerator():
 
 
 #if __name__ == "__main__":
-    #gen = ProblemDataGenerator("A","Synthetic_Full_OD_CostMatrix","X-n101-k25",99)
-
-    #gen.import_distance_matrix()
-    #gen.convert_distance_matrix()
-    #gen.createEverythingForProblemData()
-    #print(len(gen.problemDataList["clients"]))
-    #print(len(gen.problemDataList["depots"]))
-    #print(len(gen.problemDataList["vehicle_types"]))
-    #print(gen.numVehicles)
-    #gen.constructProblemData()
-    #print(gen.problemData)
+    #inputs={
+    #    "dm":"Munich_DHL_1747x1747_RoadData",
+    #    "X_set":"X-n1001-k43",
+    #    "numClients":"1746"
+    #    }
+    #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
+    #gen.doEverything()
+    #print(gen.problemData.clients())
+    #demands = [client.delivery for client in gen.problemData.clients()]
+    #print(demands[0])
+    #print(demands[1])
+    #print(demands[995:1005])
+    #print(len(demands))
 
