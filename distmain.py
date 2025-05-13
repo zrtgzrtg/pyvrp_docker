@@ -25,14 +25,13 @@ def run():
         "numClients":"99"
         }
     gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
-    gen.doEverything()
 
-    model = Model.from_data(gen.problemData)
+    model = Model.from_data(gen.getProblemData())
     res = model.solve(stop=MaxIterations(numIterations))
     print("This is the originial version \n")
     print(res)
 
-    DataCreatorObj = DataCreator(res,inputs["dm"],inputs["X_set"])
+    DataCreatorObj = DataCreator(res,inputs["dm"],inputs["X_set"],inputs)
     resDict = DataCreatorObj.runStatistics()
     setResDict(resDict)
     print(f"END RUN with (setResDict())")

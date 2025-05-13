@@ -7,10 +7,11 @@ import os
 
 
 class DataCreator():
-    def __init__(self,res,dataset,X_set):
+    def __init__(self,res,dataset,X_set,inputs):
         self.dataset = dataset
         self.X_set = X_set
         self.res = res
+        self.inputs = inputs
         
     def runStatistics(self):
         current_dir = os.path.dirname(__file__)
@@ -21,11 +22,13 @@ class DataCreator():
 
         self.res.stats.to_csv(output_file)
         pd_statistics_object = self.turn_data_to_dict(output_file)
+        # THIS IS THE STRUCTURE OF RESDICT
         return {
             "routes": self.get_best_output(),
             "stats": pd_statistics_object,
             "num_iterations": self.res.num_iterations,
             "runtime": self.res.runtime,
+            "inputs": self.inputs
         }
 
         

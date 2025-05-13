@@ -108,7 +108,11 @@ class ProblemDataGenerator():
         self.convert_distance_matrix()
         self.createEverythingForProblemData()
         self.constructProblemData()
-        print(self.problemData)
+    def getProblemData(self):
+        self.doEverything()
+        if self.problemData is None:
+            raise ValueError("PROBLEMDATA wasnt generated correctly")
+        return self.problemData
 
 
 
