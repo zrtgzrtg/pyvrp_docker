@@ -9,8 +9,8 @@ import random
 import pyvrp
 
 class ProblemDataGenerator():
-    def __init__(self,distance_matrix_name: str,X_scenario: str):
-        self.numClients = 99
+    def __init__(self,distance_matrix_name: str,X_scenario: str, numClients: int):
+        self.numClients = int(numClients)
         self.distance_matrix = None
         self.distance_matrix_raw = None
         self.X_scenario = X_scenario
@@ -63,7 +63,7 @@ class ProblemDataGenerator():
     def createVehicleTypes(self):
         capacity = self.instance["capacity"]
         # num_available is num of locations
-        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=self.get_num_vehicles())
+        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=self.numClients)
         self.problemDataList["vehicle_types"] = [vehicle_type]
     
     def createDepots(self):

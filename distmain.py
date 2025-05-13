@@ -21,8 +21,10 @@ def run():
 
     inputs={
         "dm":"Chicago_100x100_RoadData",
-        "X_set":"X-n101-k25",}
-    gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"])
+        "X_set":"X-n101-k25",
+        "numClients":"99"
+        }
+    gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
     gen.doEverything()
 
     model = Model.from_data(gen.problemData)
