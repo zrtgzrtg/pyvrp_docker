@@ -39,5 +39,5 @@ def running():
 
 
 if globals().get("resDict") is not None or __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
+    app.run(host="0.0.0.0" port=5000,debug=True, use_reloader=False)
 
