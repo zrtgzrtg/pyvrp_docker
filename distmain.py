@@ -30,9 +30,10 @@ def run():
     print("This is the originial version \n")
     print(res)
 
-    DataCreator = DataCreator(res,inputs["dm"],inputs["X_set"])
-    resDict = DataCreator.runStatistics()
+    DataCreatorObj = DataCreator(res,inputs["dm"],inputs["X_set"])
+    resDict = DataCreatorObj.runStatistics()
     setResDict(resDict)
+    print(f"END RUN with (setResDict())")
 
     #very important
     #runpy.run_path("flask_endpoint.py", init_globals={"resDict": resDict})

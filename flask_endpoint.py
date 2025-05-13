@@ -1,7 +1,7 @@
 
-from flask import Flask, request, jsonify,render_template, redirect
+from flask import Flask, request, jsonify,render_template, redirect, send_file
 import os
-from shared import getResDict
+import json
 
 app = Flask(__name__)
 
@@ -12,10 +12,17 @@ def start():
     return render_template("index.html")
 @app.route("/solution")
 def get_data():
-    if getResDict() is not None: 
-        return jsonify(getResDict())
+    with open("progress.log", "a") as log_file:
+        log_file.write(f"Reached if-statement with (getResDict()) END\n")
+    if os.path.isfile("IPC/resDict.json"): 
+        with open("progress.log", "a") as log_file2:
+            log_file2.write("REACHED Download \n")
+            return render_template("download_solution.html")
     else:
-        return render_template("solution.html")
+        return render_template("wait.html")
+@app.route("/download")
+def download():
+    return send_file("IPC/resDict.json", as_attachment=True)
 @app.route("/solver")
 def serverSolver():
     return render_template("solver.html")
@@ -25,7 +32,6 @@ def startSolver():
     with open("progress.log", "a") as log_file:
         log_file.write(f"Form received with {numIterations}")
     os.system(f"python distmain.py {numIterations} > progress.log 2>&1")
-
     return redirect("/running")
 @app.route("/running")
 def running():
