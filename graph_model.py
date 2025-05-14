@@ -1,6 +1,7 @@
  
 import os
 import matplotlib.pyplot as plt
+import graph_model
 from pyvrp.plotting import (
     plot_coordinates,
     plot_instance,
