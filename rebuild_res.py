@@ -41,9 +41,11 @@ class Res_Builder():
 
 if __name__ == "__main__":
     inputs={
-        "dm":"Munich_DHL_1747x1747_RoadData",
+        "dm":"Munich_DHL_1747x1747_RoadData", # THIS IS THE DM USED FOR PROBLEMDATA!!! ALWAYS MAKE SURE YOU IMPORT EUCLIDIAN OR REALDM
         "X_set":"X-n1001-k43",
         "numClients":"1746"
         }
     resB = Res_Builder(inputs, "Munich23k.json")
-    print(resB.returnRes())
+    actualPythonResPyvrpObject = resB.returnRes()
+
+    print(actualPythonResPyvrpObject)

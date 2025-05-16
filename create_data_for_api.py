@@ -7,18 +7,19 @@ import os
 
 
 class DataCreator():
-    def __init__(self,res,dataset,X_set,inputs):
+    def __init__(self,res,dataset,X_set,threadID,seed):
         self.dataset = dataset
         self.X_set = X_set
         self.res = res
-        self.inputs = inputs
+        self.threadID = threadID
+        self.seed = seed
         
     def runStatistics(self):
         current_dir = os.path.dirname(__file__)
         location=f"output_from_res"
         filepath=os.path.join(current_dir,location)
         os.makedirs(f"{filepath}", exist_ok=True)
-        output_file=os.path.join(filepath,f"{self.dataset}_{self.X_set}.csv")
+        output_file=os.path.join(filepath,f"{self.dataset}_{self.X_set}_{self.threadID}.csv")
 
         self.res.stats.to_csv(output_file)
         pd_statistics_object = self.turn_data_to_dict(output_file)
@@ -28,17 +29,19 @@ class DataCreator():
             "stats": pd_statistics_object,
             "num_iterations": self.res.num_iterations,
             "runtime": self.res.runtime,
-            "inputs": self.inputs
+            "DMUsedName": self.dataset,
+            "X_setUsedName": self.X_set,
+            "seed":self.seed
         }
 
         
     
-    def import_statistics(self,dataset,X_set):
-        current_dir=os.path.dirname(__file__)
-        location=f"output_from_res/{dataset}_{X_set}.csv"
-        filepath=os.path.join(current_dir,location)
-        res=Statistics.from_csv(filepath)
-        return res
+    #def import_statistics(self,dataset,X_set):
+    #    current_dir=os.path.dirname(__file__)
+    #    location=f"output_from_res/{dataset}_{X_set}.csv"
+    #    filepath=os.path.join(current_dir,location)
+    #    res=Statistics.from_csv(filepath)
+    #    return res
     def turn_data_to_dict(self,filepath):
         df=pd.read_csv(filepath)
         return df.to_dict(orient="records")

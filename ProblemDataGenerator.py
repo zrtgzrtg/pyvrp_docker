@@ -118,11 +118,33 @@ class ProblemDataGenerator():
         self.convert_distance_matrix()
         self.createEverythingForProblemData()
         self.constructProblemData()
-    def getProblemData(self):
-        self.doEverything()
+    def doEverythingDEBUG(self, debugCapacity):
+        self.import_distance_matrix()
+        self.convert_distance_matrix()
+        # Now we overwrite capacity in the .vrp file so vehicle type in createEverythingForProblemData is affected
+        self.overwriteCapacityDebugFile()
+        self.createEverythingForProblemData(int(debugCapacity))
+        self.constructProblemData()
+ 
+    def getProblemData(self,debugBOOLEAN,debugCapacity):
+        if debugBOOLEAN:
+            self.doEverythingDEBUG(int(debugCapacity))
+        else:
+            self.doEverything()
+
         if self.problemData is None:
             raise ValueError("PROBLEMDATA wasnt generated correctly")
         return self.problemData
+
+    def overwriteCapacityDebugFile(self,new_capacity):
+        filepath = f"data/Vrp-Set-X/X/debug.vrp"
+        with open(filepath, "r") as f:
+            lines = f.readlines()
+
+        lines[5] = f"CAPACITY : {new_capacity}\n"
+
+        with open(filepath, "w") as f:
+            f.writelines(lines)
 
 
 

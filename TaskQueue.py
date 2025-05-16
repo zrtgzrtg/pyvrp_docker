@@ -3,8 +3,7 @@ import time
 
 
 class RunningTask():
-    def __init__(self, task_id,process,openFile):
-        self.task_id = task_id
+    def __init__(self,process,openFile):
         self.process = process
         self.openFile = openFile
  
@@ -15,11 +14,10 @@ class TaskQueue():
         self.queue = []
         self.running = []
         self.start_Process_Function = start_Process_Function
-        self.numThreads = 0
+
 
     def addTask(self, subProcessTask):
         self.queue.append(subProcessTask)
-        self.numThreads += 1
 
     def startTaskQueue(self):
         while self.queue or self.running:
@@ -29,7 +27,7 @@ class TaskQueue():
                 if runningTask.process.poll() is None:
                     still_running.append(runningTask)
                 else:
-                    print(f"Process with task_id: {runningTask.task_id} has finished!")
+                    print(f"Process with has finished!")
                     runningTask.openFile.close()
             
             self.running = still_running
@@ -40,7 +38,7 @@ class TaskQueue():
                 # needs class that has a .start function
                 process, openFile = subProcessTask.start()
 
-                self.running.append(RunningTask(self.numThreads,process,openFile))
+                self.running.append(RunningTask(process,openFile))
             
             time.sleep(0.5)
 

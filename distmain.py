@@ -1,40 +1,40 @@
 
-import graph_model
 from ProblemDataGenerator import ProblemDataGenerator
-import pyvrp
 from pyvrp import Model
 from pyvrp.stop import MaxIterations
-from flask import jsonify
 from create_data_for_api import DataCreator
-import runpy
 import sys
-import os
 from shared import setResDict
+from Process_Starter import Subprocess_Starter
 
 def run():
     print("REACHED RUN")
     
-    numIterations = 1000
+    numIterations = 500
     numItInput=int(sys.argv[1])
-    if numItInput > 1000:
+    if numItInput > 500:
         numIterations = numItInput
 
     inputs={
-        "dm":"Munich_DHL_1747x1747_RoadData",
-        "X_set":"X-n1001-k43",
-        "numClients":"1746"
+        "dm":"Chicago_100x100_RoadData", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
+        "X_set":"X-n101-k25",
+        "numClients":"99"
         }
-    gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
+        # DebugCapacity is set to 10 standard and debugBoolean has standard value False
+    subprocessstarter = Subprocess_Starter("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData",inputs,8,4,4,1000,debugBOOLEAN=True,debugCapacity=10)
+    subprocessstarter.doEverything()
+    # OLD DISTMAIN.py
+    #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
 
-    model = Model.from_data(gen.getProblemData())
-    res = model.solve(stop=MaxIterations(numIterations))
-    print("This is the originial version \n")
-    print(res)
+    #model = Model.from_data(gen.getProblemData())
+    #res = model.solve(stop=MaxIterations(numIterations))
+    #print("This is the originial version \n")
+    #print(res)
 
-    DataCreatorObj = DataCreator(res,inputs["dm"],inputs["X_set"],inputs)
-    resDict = DataCreatorObj.runStatistics()
-    setResDict(resDict)
-    print(f"END RUN with (setResDict())")
+    #DataCreatorObj = DataCreator(res,inputs["dm"],inputs["X_set"],inputs)
+    #resDict = DataCreatorObj.runStatistics()
+    #setResDict(resDict)
+    #print(f"END RUN with (setResDict())")
 
     #very important
     #runpy.run_path("flask_endpoint.py", init_globals={"resDict": resDict})
