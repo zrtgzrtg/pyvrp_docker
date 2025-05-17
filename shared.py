@@ -15,3 +15,4 @@ def setResDictThread(new_resDict,threadID):
     dirpath = os.path.join(basedir,locationDir,f"solver_{threadID}_resDict.json")
     with open(dirpath, "w") as output_f:
         json.dump(new_resDict,output_f)
+    # implement logic to put combined DICT of resDicts into the download path

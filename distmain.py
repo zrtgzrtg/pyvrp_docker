@@ -21,7 +21,7 @@ def run():
         "numClients":"99"
         }
         # DebugCapacity is set to 10 standard and debugBoolean has standard value False
-    subprocessstarter = Subprocess_Starter("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData",inputs,8,4,4,1000,debugBOOLEAN=True,debugCapacity=10)
+    subprocessstarter = Subprocess_Starter("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData",inputs,8,4,4,numIterations,debugBOOLEAN=True,debugCapacity=100)
     subprocessstarter.doEverything()
     # OLD DISTMAIN.py
     #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])

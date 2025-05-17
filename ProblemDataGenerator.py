@@ -122,8 +122,8 @@ class ProblemDataGenerator():
         self.import_distance_matrix()
         self.convert_distance_matrix()
         # Now we overwrite capacity in the .vrp file so vehicle type in createEverythingForProblemData is affected
-        self.overwriteCapacityDebugFile()
-        self.createEverythingForProblemData(int(debugCapacity))
+        self.overwriteCapacityDebugFile(int(debugCapacity))
+        self.createEverythingForProblemData()
         self.constructProblemData()
  
     def getProblemData(self,debugBOOLEAN,debugCapacity):
