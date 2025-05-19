@@ -1,4 +1,5 @@
 
+import subprocess   
 from flask import Flask, request, jsonify,render_template, redirect, send_file
 import os
 import json
@@ -31,7 +32,11 @@ def startSolver():
     numIterations = request.form.get("iterations", type=int)
     with open("progress.log", "a") as log_file:
         log_file.write(f"Form received with {numIterations}")
+    # Blocking process !!
     os.system(f"python distmain.py {numIterations} > progress.log 2>&1")
+    #process = subprocess.Popen(["python3","distmain.py"])
+    #with open("IPC/process.pid","w") as f:
+    #    f.write(str(process.pid))
     return redirect("/running")
 @app.route("/running")
 def running():

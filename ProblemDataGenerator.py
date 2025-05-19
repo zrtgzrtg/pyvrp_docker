@@ -63,7 +63,7 @@ class ProblemDataGenerator():
     def createVehicleTypes(self):
         capacity = self.instance["capacity"]
         # num_available is num of locations
-        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=self.numClients)
+        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=15)
         self.problemDataList["vehicle_types"] = [vehicle_type]
     
     def createDepots(self):
