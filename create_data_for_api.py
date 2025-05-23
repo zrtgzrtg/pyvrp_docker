@@ -31,7 +31,8 @@ class DataCreator():
             "runtime": self.res.runtime,
             "DMUsedName": self.dataset,
             "X_setUsedName": self.X_set,
-            "seed":self.seed
+            "seed":self.seed,
+            "isFeasible":self.res.best.is_feasible()
         }
 
         
@@ -71,6 +72,7 @@ class DataCreator():
         return normalized_routes        
     
     def build_from_resdict(self,resDict,problemData):
+        # if resDict is Feasible IMPLEMENTATION
         
         res = Result(Solution(problemData,resDict["routes"]),resDict["stats"],int(resDict["num_iterations"]),float(resDict["runtime"]))
         return res

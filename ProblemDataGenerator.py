@@ -17,7 +17,7 @@ class ProblemDataGenerator():
         self.instance = self.importScenario()
         self.distance_matrix_name = distance_matrix_name
         self.problemData = None
-        self.numVehicles = self.get_num_vehicles()
+        #self.numVehicles = self.get_num_vehicles()
         self.problemDataList = {
             "depots": "a",
             "clients": "a",
@@ -63,7 +63,7 @@ class ProblemDataGenerator():
     def createVehicleTypes(self):
         capacity = self.instance["capacity"]
         # num_available is num of locations
-        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=15)
+        vehicle_type = pyvrp.VehicleType(capacity = [capacity], num_available=self.numClients)
         self.problemDataList["vehicle_types"] = [vehicle_type]
     
     def createDepots(self):
@@ -126,9 +126,10 @@ class ProblemDataGenerator():
         self.createEverythingForProblemData()
         self.constructProblemData()
  
-    def getProblemData(self,debugBOOLEAN,debugCapacity):
+    def getProblemData(self,*,debugBOOLEAN=False,debugCapacity=10):
         if debugBOOLEAN:
-            self.doEverythingDEBUG(int(debugCapacity))
+            #self.doEverythingDEBUG(int(debugCapacity))
+            self.doEverything()
         else:
             self.doEverything()
 

@@ -17,11 +17,12 @@ def run():
 
     inputs={
         "dm":"Chicago_100x100_RoadData", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
-        "X_set":"X-n101-k25",
+        "X_set":"X-n101-k25", # Instead of debug boolean assign debug.vrp here
         "numClients":"99"
         }
         # DebugCapacity is set to 10 standard and debugBoolean has standard value False
-    subprocessstarter = Subprocess_Starter("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData",inputs,2,1,1,numIterations,debugBOOLEAN=True,debugCapacity=10)
+        # DEBUGcapacity does not work multithreaded. Always change in debug.vrp file manually. 
+    subprocessstarter = Subprocess_Starter("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData",inputs,64,32,32,numIterations,debugBOOLEAN=False,debugCapacity=10)
     subprocessstarter.doEverything()
     # OLD DISTMAIN.py
     #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
