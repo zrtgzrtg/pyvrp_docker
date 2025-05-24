@@ -6,6 +6,7 @@ from create_data_for_api import DataCreator
 import sys
 from shared import setResDict
 from Process_Starter import Subprocess_Starter
+from data.city_matrices import city_matrices
 
 def run():
     print("REACHED RUN")
@@ -14,15 +15,16 @@ def run():
     numItInput=int(sys.argv[1])
     if numItInput > 500:
         numIterations = numItInput
+    realDM, Ec2DDM = city_matrices[sys.argv[2]]
+    vrp_file = sys.argv[3]
+    numClients = sys.argv[4]
 
     inputs={
-        "dm":"Chicago_100x100_RoadData", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
-        "X_set":"X-n101-k25", # Instead of debug boolean assign debug.vrp here
-        "numClients":"99"
+        "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
+        "X_set":vrp_file, # Instead of debug boolean assign debug.vrp here
+        "numClients": numClients
         }
-        # DebugCapacity is set to 10 standard and debugBoolean has standard value False
-        # DEBUGcapacity does not work multithreaded. Always change in debug.vrp file manually. 
-    subprocessstarter = Subprocess_Starter("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData",inputs,64,32,32,numIterations,debugBOOLEAN=False,debugCapacity=10)
+    subprocessstarter = Subprocess_Starter(realDM,Ec2DDM,inputs,4,2,2,numIterations)
     subprocessstarter.doEverything()
     # OLD DISTMAIN.py
     #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])

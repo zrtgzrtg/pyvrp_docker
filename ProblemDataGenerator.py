@@ -126,13 +126,8 @@ class ProblemDataGenerator():
         self.createEverythingForProblemData()
         self.constructProblemData()
  
-    def getProblemData(self,*,debugBOOLEAN=False,debugCapacity=10):
-        if debugBOOLEAN:
-            #self.doEverythingDEBUG(int(debugCapacity))
-            self.doEverything()
-        else:
-            self.doEverything()
-
+    def getProblemData(self):
+        self.doEverything()
         if self.problemData is None:
             raise ValueError("PROBLEMDATA wasnt generated correctly")
         return self.problemData

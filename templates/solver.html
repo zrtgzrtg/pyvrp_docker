@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/style.css">
     <title>Solver Configurator</title>
 </head>
 <body>
     <div>Configure the Solver here!!</div>
     <form action="/solve" method="post">
+        <label for="vrp-file">Choose a VRP file:</label>
+        <select name="vrp-file" id="vrp-file" required>
+            {% for file in  filenames %}
+            <option value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+        <label for="city">Choose a City to Solve:</label>
+        <select name="city" id="city">
+            {% for c in cities %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+        <label for="numClients">Choose a number of Clients:</label>
+        <input type="number" id="numClients" name="numClients" placeholder="N-1 of DM" required>
         <label for="iterations">Number of Iterations: </label>
         <input type="number" id="iterations" name="iterations" required>
         <button type="submit">Start Solve</button>

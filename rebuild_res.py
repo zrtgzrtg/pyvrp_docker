@@ -102,12 +102,15 @@ if __name__ == "__main__":
     #builder.retSplitJsonTEST("Import_loc_for_resDict/combinedresDict24k.json")
 
 
-    resB = Res_Builder(inputs, "Import_loc_for_resDict/64Threads150kChicago.json")
-    resListRealDM,resListEc2D = resB.runRebuildCombinedResDict()
+    #resB = Res_Builder(inputs, "Import_loc_for_resDict/64Threads150kChicago.json")
+    #resListRealDM,resListEc2D = resB.runRebuildCombinedResDict()
 
-    bestRealDMRes,bestRealDMResIndex = resB.findBestinList(resListRealDM)
-    bestEc2DRes, bestEc2DResIndex = resB.findBestinList(resListEc2D)
-    print(bestRealDMRes.best)
-    print("\n\n")
-    print(bestEc2DRes.best)
+    #bestRealDMRes,bestRealDMResIndex = resB.findBestinList(resListRealDM)
+    #bestEc2DRes, bestEc2DResIndex = resB.findBestinList(resListEc2D)
+    #print(bestRealDMRes.best)
+    #print("\n\n")
+    #print(bestEc2DRes.best)
+
+    resZ = ProblemDataGenerator(inputs["Realdm"], inputs["X_set"],inputs["numClients"])
+    problemData = resZ.getProblemData()
 

@@ -6,7 +6,7 @@ from TaskQueue import TaskQueue
 from SubProcessTask import SubProcessTask
 
 class Subprocess_Starter():
-    def __init__(self, RealDMname,Ec2DDMname,inputs,numThreads: int,numEc2D: int,numRealDM: int, numIterations: int,*,debugBOOLEAN: bool = False, debugCapacity: int = 10):
+    def __init__(self, RealDMname,Ec2DDMname,inputs,numThreads: int,numEc2D: int,numRealDM: int, numIterations: int):
         self.RealDMname = RealDMname
         self.Ec2dDMname = Ec2DDMname
         self.inputs = inputs
@@ -15,8 +15,6 @@ class Subprocess_Starter():
         self.numRealDM = numRealDM
         self.taskQueue = None
         self.numIterations = numIterations
-        self.debugBOOLEAN = debugBOOLEAN
-        self.debugCapacity = debugCapacity
         self.counter = 1
 
     def checkInputs(self):
@@ -54,7 +52,7 @@ class Subprocess_Starter():
             with open(log_filepath, "w") as log_file:
                 log_file.write(f"LogFile for Solver: {i+1}\n")
     def createOutputDicts(self):
-        run_dir = "resDictThreads"
+        run_dir = "IPC/resDictThreads"
         if os.path.exists(run_dir):
             shutil.rmtree(run_dir)
         os.makedirs(run_dir)
@@ -68,12 +66,12 @@ class Subprocess_Starter():
 
     def create_Task(self, type):
         if type == 1:
-            task = SubProcessTask("RealDM",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname,self.debugBOOLEAN,self.debugCapacity)
+            task = SubProcessTask("RealDM",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname)
             print(f"RealDM process with ID: {self.counter} created! \n")
             self.counter += 1
             return task
         else:
-            task = SubProcessTask("Ec2D",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname,self.debugBOOLEAN,self.debugCapacity)
+            task = SubProcessTask("Ec2D",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname)
             print(f"Ec2D process with ID: {self.counter} created!\n")
             self.counter += 1
             return task

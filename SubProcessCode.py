@@ -25,9 +25,10 @@ def main():
         gen = ProblemDataGenerator(args["RealDMname"],args["X_set"],args["numClients"])
     else:
         gen = ProblemDataGenerator(args["Ec2DDMname"],args["X_set"],args["numClients"])
+    print(f"{args["RealDMname"]}\n,{args["X_set"]}\n,{args["numClients"]}\n")
 
 
-    problemData = gen.getProblemData(debugBOOLEAN=args["debugBOOLEAN"],debugCapacity=args["debugCapacity"])
+    problemData = gen.getProblemData()
     model = Model.from_data(problemData)
     # nanoseconds since 1970 modulo max integer size
     timeseed = time.time_ns() % (2**32)

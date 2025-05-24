@@ -1,12 +1,15 @@
 
+import re
 import threading
 import time
 from ResultServer import Result_Server
 import psutil
 import subprocess   
 from flask import Flask, request, jsonify,render_template, redirect, send_file
+from data.city_matrices import city_matrices
 import os
 import json
+import shutil
 
 app = Flask(__name__)
 
@@ -21,13 +24,35 @@ def is_process_alive(pid):
     except psutil.NoSuchProcess:
         return False
 def watcherFunction(pid):
-    while psutil.pid_exists(pid):
-        if not is_process_alive(pid):
-            break
+    res_dir = "IPC/resDictThreads"
+    while True:
+        if psutil.pid_exists(pid):
+            if not is_process_alive(pid):
+                if os.path.exists(res_dir):
+                    with open("progress.log", "a") as log:
+                        log.write("Solver process completed. Generating ZIP now...\n")
+                    break
+                else:
+                    with open("progress.log", "a") as f:
+                        f.write("IPC/resDictThreads not created yet!. No process has started till now! \n")
+        else:
+            if os.path.exists(res_dir):
+                with open("progress.log","a") as f1:
+                    f1.write("process gone but resDict There")
+                break
+            else:
+                with open("progress.log","a") as f2:
+                    f2.write("process gone but waiting longer")
         time.sleep(60)
-    with open("progress.log", "a") as log:
-        log.write("Solver process completed. Generating ZIP now...\n")
+    
     Result_Server().giveZipresDict()
+def extract_n(filename):
+    match = re.search(r"n(\d+)",filename)
+    if match:
+        return int(match.group(1))
+    else:
+        return 99999
+
 
 
 
@@ -40,37 +65,43 @@ def start():
 def get_data():
     with open("progress.log", "a") as log_file:
         log_file.write(f"Reached if-statement with (getResDict()) END\n")
-    try:
-        with open("IPC/job.pid") as f:
-            pid = int(f.read().strip())
-        with open("progress.log","a") as log:
-            log.write(f"PID ASSIGNED NOW pid: {pid}")
-    except FileNotFoundError:
-        with open("progress.log", "a")as f:
-            f.write(f"reached FileNotFoundError")
-            return render_template("wait.html")
-    if is_process_alive(pid):
-        return render_template("wait.html")
-    else:
-        with open("progress.log","a") as f:
-            res_handler = Result_Server()
-            res_handler.giveZipresDict()
+        if os.path.exists("IPC/combined_resDict.zip"):
+            log_file.write("Zip Exists! Serving Download now!")
             return render_template("download_solution.html")
+        else:
+            log_file.write("Zip doesnt Exist yet. Serve Wait page!")
+            return render_template("wait.html")
 @app.route("/download")
 def download():
     return send_file("IPC/combined_resDict.zip", as_attachment=True)
 @app.route("/solver")
 def serverSolver():
-    return render_template("solver.html")
+    vrp_path = "data/Vrp-Set-X/X/"
+    sorted_files = sorted(os.listdir(vrp_path), key=extract_n)
+
+    filenames_list = [f[:-4] for f in sorted_files if f.endswith(".vrp")]
+
+    city_names = list(city_matrices.keys())
+    return render_template("solver.html",cities=city_names,filenames = filenames_list)
 @app.route("/solve", methods=["POST"])
 def startSolver():
     numIterations = request.form.get("iterations", type=int)
+    city = request.form.get("city", type=str)
+    vrp_file = request.form.get("vrp-file", type=str)
+    numClients = request.form.get("numClients", type=int)
     with open("progress.log", "a") as log_file:
         log_file.write(f"Form received with {numIterations}")
     # Blocking process !!
     # os.system(f"python distmain.py {numIterations} > progress.log 2>&1")
+
+    # Delete old resDictThreads so Subprocess and watcher dont Fail
+    res_dir = "IPC/resDictThreads"
+    if os.path.exists(res_dir):
+        shutil.rmtree(res_dir)
+        with open("progress.log", "a") as abc:
+            abc.write("Deleted old Resdict. Now can rerun succesfully")
     with open("progress.log", "a") as f:
-        process = subprocess.Popen(["python3","distmain.py",f"{numIterations}"],
+        process = subprocess.Popen(["python3","distmain.py",f"{numIterations}",f"{city}",f"{vrp_file}",f"{numClients}"],
                                    stdout=f,
                                    stderr=f
                                )
@@ -84,6 +115,8 @@ def running():
     return render_template("running.html")
 
 
-if globals().get("resDict") is not None or __name__ == "__main__":
+if __name__ == "__main__":
+    # normal version
     app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
+    #app.run(debug=True)
 
