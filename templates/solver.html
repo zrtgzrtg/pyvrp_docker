@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script  src="{{ url_for('static', filename='script.js') }}"></script>
     <title>Solver Configurator</title>
 </head>
 <body>
     <div>Configure the Solver here!!</div>
-    <form action="/solve" method="post">
+    <form action="/solve" method="post" id="input-form">
         <label for="vrp-file">Choose a VRP file:</label>
         <select name="vrp-file" id="vrp-file" required>
             {% for file in  filenames %}
@@ -25,9 +26,23 @@
         <input type="number" id="numClients" name="numClients" placeholder="N-1 of DM" required>
         <label for="iterations">Number of Iterations: </label>
         <input type="number" id="iterations" name="iterations" required>
+
+        <div>
+            <label for="numThreads">Number of Threads</label>
+            <input name="numThreads" type="number" id="numThreads" max="196" placeholder="Max: 196" required>
+        </div>
+        <div>
+            <label for="numRealDM">Number of RealDM Threads</label>
+            <input name="numRealDM" type="number" id="numRealDM" placeholder="Ec2D calc from this" required>
+        </div>
+        <div>
+            <label for="placeholder">Validation</label>
+            <div class="input-Checker valid" id="input-Checker">Valid!</div>
+        </div>
+
         <button type="submit">Start Solve</button>
     </form>
-    <div id="back-to main"><button>
+    <div id="back-to-main"><button>
         <a href="/">Back to main</a>
     </button></div>
     

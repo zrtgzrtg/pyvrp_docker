@@ -89,8 +89,25 @@ def startSolver():
     city = request.form.get("city", type=str)
     vrp_file = request.form.get("vrp-file", type=str)
     numClients = request.form.get("numClients", type=int)
+    numThreads = request.form.get("numThreads",type=int)
+    numRealDM = request.form.get("numRealDM",type=int)
+    calcEc2D = numThreads-numRealDM
     with open("progress.log", "a") as log_file:
         log_file.write(f"Form received with {numIterations}")
+        log_file.write("Creating the inputsHTML now!")
+    
+    inputsHTML = {
+        "numIterations": numIterations,
+        "city": city,
+        "vrp-file":vrp_file,
+        "numClients":numClients,
+        "numThreads": numThreads,
+        "numRealDM": numRealDM,
+        "numEc2D": calcEc2D
+    }
+    inputsHTMLstr = json.dumps(inputsHTML)
+    with open("IPC/inputsHTML.json","w") as f:
+        json.dump(inputsHTML,f)
     # Blocking process !!
     # os.system(f"python distmain.py {numIterations} > progress.log 2>&1")
 
@@ -101,7 +118,7 @@ def startSolver():
         with open("progress.log", "a") as abc:
             abc.write("Deleted old Resdict. Now can rerun succesfully")
     with open("progress.log", "a") as f:
-        process = subprocess.Popen(["python3","distmain.py",f"{numIterations}",f"{city}",f"{vrp_file}",f"{numClients}"],
+        process = subprocess.Popen(["python3","distmain.py",inputsHTMLstr],
                                    stdout=f,
                                    stderr=f
                                )

@@ -21,3 +21,11 @@ body {
     width: 75%;
     height: 10%;
 }
+
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}

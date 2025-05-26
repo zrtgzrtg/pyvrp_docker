@@ -10,3 +10,4 @@ reminder_start.txt
 Import_loc_for_resDict/
 data/distance_matrices/*.json
 runLogs/
+tmpZip/

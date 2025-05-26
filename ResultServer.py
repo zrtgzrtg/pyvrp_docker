@@ -43,8 +43,12 @@ class Result_Server():
 
     def giveZipresDict(self):
         filepath_json = self.combineJSONS()
+        filepathInputs = "IPC/inputsHTML.json"
         with zipfile.ZipFile(self.output_zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
             zipf.write(filepath_json, arcname=os.path.basename(filepath_json))
+            
+            if os.path.exists(filepathInputs):
+                zipf.write(filepathInputs, arcname=os.path.basename(filepathInputs))
         return self.output_zip_path
     #def combineJSONS(self):
     #    parent_dir = "resDictThreads"

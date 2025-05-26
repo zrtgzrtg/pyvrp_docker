@@ -1,4 +1,5 @@
 
+import time
 import re
 import vrplib
 import numpy 
@@ -78,9 +79,12 @@ class ProblemDataGenerator():
         raise ValueError(f"Could not extract vehicle count from: {self.X_scenario}")
     
     def createClients(self):
-        remainingNumClients = self.numClients
+        # dm is 100x100
+        # self.instance = vrplib import from X-n101-k25 Scenario
+        remainingNumClients = self.numClients #99
         clients = []
         while remainingNumClients > 0:
+            time.sleep(0.1)    
             if remainingNumClients > self.instance["dimension"]-1:
                 demands = self.instance["demand"][1:self.instance["dimension"]]
                 # x = 0 and y = 0 are placeholders again since we are using distance matrix
@@ -151,17 +155,42 @@ class ProblemDataGenerator():
 
 
 #if __name__ == "__main__":
-    #inputs={
-    #    "dm":"Munich_DHL_1747x1747_RoadData",
-    #    "X_set":"X-n1001-k43",
-    #    "numClients":"1746"
-    #    }
-    #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
-    #gen.doEverything()
-    #print(gen.problemData.clients())
-    #demands = [client.delivery for client in gen.problemData.clients()]
-    #print(demands[0])
-    #print(demands[1])
-    #print(demands[995:1005])
-    #print(len(demands))
+#    #inputs={
+#    #    "dm":"Chicago_100x100_RoadData",
+#    #    "X_set":"X-n101-k25",
+#    #    "numClients":"99"
+#    #    }
+#    #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
+#    #gen.doEverything()
+#    #print(gen.problemData.clients())
+#    #demands = [client.delivery for client in gen.problemData.clients()]
+#    #print(demands)
+#    inputs = {
+#        "dm": "Chicago_100x100_RoadData",
+#        "X_set": "X-n101-k25",
+#        "numClients": "99"
+#    }
+#
+#    gen = ProblemDataGenerator(inputs["dm"], inputs["X_set"], inputs["numClients"])
+#    gen.doEverything()
+#
+#    # Extract generated problem data
+#    problem_data = gen.getProblemData()
+#
+#    # Extract actual demands from the generated clients
+#    clients = problem_data.clients()
+#    print(clients[0].delivery[0])
+#    print(clients[98].delivery[0])
+#    m = problem_data.distance_matrix(0)
+#
+#    
+#    print(problem_data.num_profiles)
+#    print(m[1,10])
+#    print(m[1][2])
+#    print(m[0, 1])
+#    print(clients[0].delivery[0])
+#
+#
 
+
+   

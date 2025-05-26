@@ -1,4 +1,5 @@
 
+import json
 from ProblemDataGenerator import ProblemDataGenerator
 from pyvrp import Model
 from pyvrp.stop import MaxIterations
@@ -10,21 +11,27 @@ from data.city_matrices import city_matrices
 
 def run():
     print("REACHED RUN")
+
+    inputsHTMLstr = sys.argv[1]
+    inputsHTML = json.loads(inputsHTMLstr)
     
     numIterations = 500
-    numItInput=int(sys.argv[1])
+    numItInput=int(inputsHTML["numIterations"])
     if numItInput > 500:
         numIterations = numItInput
-    realDM, Ec2DDM = city_matrices[sys.argv[2]]
-    vrp_file = sys.argv[3]
-    numClients = sys.argv[4]
+    realDM, Ec2DDM = city_matrices[inputsHTML["city"]]
+    vrp_file = inputsHTML["vrp-file"]
+    numClients = inputsHTML["numClients"]
+    numThreads = inputsHTML["numThreads"]
+    numRealDM = inputsHTML["numRealDM"]
+    numEc2D = inputsHTML["numEc2D"]
 
     inputs={
         "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
         "X_set":vrp_file, # Instead of debug boolean assign debug.vrp here
         "numClients": numClients
         }
-    subprocessstarter = Subprocess_Starter(realDM,Ec2DDM,inputs,4,2,2,numIterations)
+    subprocessstarter = Subprocess_Starter(realDM,Ec2DDM,inputs,numThreads,numEc2D,numRealDM,numIterations)
     subprocessstarter.doEverything()
     # OLD DISTMAIN.py
     #gen = ProblemDataGenerator(inputs["dm"],inputs["X_set"],inputs["numClients"])
