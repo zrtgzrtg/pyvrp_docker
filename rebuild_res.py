@@ -1,4 +1,5 @@
 from ProblemDataGenerator import ProblemDataGenerator
+import pickle
 import shutil
 import zipfile
 import sys
@@ -9,12 +10,13 @@ import os
 from data.city_matrices import city_matrices
 
 class Res_Builder():
-    def __init__(self,inputs,resDictPathtmp):
+    def __init__(self,inputs,resDictPathtmp,inputHTMLpassObj):
         self.inputs = inputs
         self.resDictPathtmp = resDictPathtmp
         self.resDictName = os.path.basename(resDictPathtmp)
         self.genRealDM = ProblemDataGenerator(self.inputs["Realdm"],self.inputs["X_set"],self.inputs["numClients"])
         self.genEc2D = ProblemDataGenerator(self.inputs["Ec2Ddm"],self.inputs["X_set"],self.inputs["numClients"])
+        self.inputHTML = inputHTMLpassObj
         
 
     def getProblemData(self,isRealDM:bool):
@@ -79,7 +81,7 @@ class Res_Builder():
                 print("reached ec2d")
                 print(ent.get("DMUsedName"))
                 combindedEc2D.append(self.returnRes(ent,False))
-        return combinedRealDM,combindedEc2D
+        return combinedRealDM,combindedEc2D,self.inputHTML
 
 def findBestinList(resList):
     for index, res in enumerate(resList):
@@ -111,40 +113,81 @@ def Res_Builder_Factory(zipfilepath):
         "numClients": inputHTML["numClients"]
     }
 
-    rB = Res_Builder(inputs,resDictpath)
+    rB = Res_Builder(inputs,resDictpath,inputHTML)
     return rB
+def appendResListDictToPickle(importName,listRealDMSorted,listEc2DSorted,inputHTML):
+    dbLocation = "pickleDB/db.pkl"
+    dict = {
+            "SortedRealDM": listRealDMSorted,
+            "SortedEc2D": listEc2DSorted,
+            "inputHTML": inputHTML
+        }
+    if os.path.exists(dbLocation):
+        with open(dbLocation, "rb") as f:
+            db = pickle.load(f)
+        if importName in db:
+                print(f"No save possible! Key: {importName} already exists in db!")
+                return importName,listRealDMSorted,listEc2DSorted,inputHTML
+        else:
+                print(f"Saving under the name {importName}")
+                db[f"{importName}"] = dict
+                with open(dbLocation,"wb") as f2:
+                    pickle.dump(db,f2)
+    else:
+        saveAsBackup(importName,listRealDMSorted,listEc2DSorted,inputHTML)
+
+def saveAsBackup(importName,listRealDMSorted,listEc2DSorted,inputHTML):
+    dict = {
+                "SortedRealDM": listRealDMSorted,
+                "SortedEc2D": listEc2DSorted,
+                "inputHTML": inputHTML
+            }
+    os.makedirs("pickleDB/backups",exist_ok=True)
+    with open(f"pickleDB/backups/{importName}.pkl", "wb") as f:
+            pickle.dump(dict, f)
 
 
-
-
-    
-    
-
-
-        
-
-            
-
-    
-        
-
-if __name__ == "__main__":
-
+def getDB():
+    with open("pickleDB/db.pkl", "rb") as f:
+        db = pickle.load(f)
+    return db
+def importAndSaveToDB(zipName):
     importZipPathfirst = "Import_loc_for_resDict"
     # in importZiptpath put the name f the imported zip
-    importZipPath = os.path.join(importZipPathfirst,"combined_resDictM40k.zip")
+    zipNameadded = f"{zipName}.zip"
+    importZipPath = os.path.join(importZipPathfirst,zipNameadded)
     resBuilder = Res_Builder_Factory(importZipPath)
-    resListRealDM, resListEc2D = resBuilder.runRebuildCombinedResDict()
-    for res in resListRealDM:
-        print(res)
-    for res in resListEc2D:
-        print(res)
+    resListRealDM, resListEc2D,inputHTML = resBuilder.runRebuildCombinedResDict()
+    #for res in resListRealDM:
+    #    print(res)
+    #for res in resListEc2D:
+    #    print(res)
     resListRealDMSorted = findBestinList(resListRealDM)
     resListEc2DSorted = findBestinList(resListEc2D)
     print(resListRealDMSorted[0])
     print("\n\n")
     print(resListEc2DSorted[0])
+    nameInDB = os.path.splitext(os.path.basename(importZipPath))[0]
+    print(nameInDB)
+    saveAsBackup(nameInDB,resListRealDMSorted,resListEc2DSorted,inputHTML)
 
+def loadPickleBackup(zipName,indexRealDM,indexEc2D):
+    with open(f"pickleDB/backups/{zipName}.pkl", "rb") as f:
+        data = pickle.load(f)
+    print("-----------INPUTS-----------\n")
+    print(f"{data['inputHTML']}\n")
+    print("-----------BESTREALDM-----------\n")
+    print(f"{data['SortedRealDM'][indexRealDM]}\n")
+    print("-----------BESTEC2D-----------\n")
+    print(data["SortedEc2D"][indexEc2D])
+ 
+
+if __name__ == "__main__":
+    zipName = "32x20kChicago"
+    #importAndSaveToDB(zipName)
+
+    loadPickleBackup("32x20kChicago",0,0)
+   
 
    
     #builder = Res_Builder(inputs,"f")

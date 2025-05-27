@@ -25,6 +25,20 @@ def run():
     numThreads = inputsHTML["numThreads"]
     numRealDM = inputsHTML["numRealDM"]
     numEc2D = inputsHTML["numEc2D"]
+    debugCapacity = inputsHTML["debugCapacity"]
+    isDebugRun = inputsHTML["isDebugRun"]
+    
+    if isDebugRun:
+        with open("data/Vrp-Set-X/X/debug.vrp", "r") as f:
+            lines = f.readlines()
+        for i, line in enumerate(lines):
+            if line.strip().startswith("CAPACITY"):
+                lines[i] = f"CAPACITY : {debugCapacity}\n"
+                break
+        with open("data/Vrp-Set-X/X/debug.vrp", "w") as f2:
+            f2.writelines(lines)
+    else:
+        pass
 
     inputs={
         "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO

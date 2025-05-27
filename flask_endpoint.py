@@ -92,6 +92,10 @@ def startSolver():
     numThreads = request.form.get("numThreads",type=int)
     numRealDM = request.form.get("numRealDM",type=int)
     calcEc2D = numThreads-numRealDM
+    debugCapacity = request.form.get("debugCapacity",type=int)
+    debugstr = request.form.get("isDebugRun", type=str)
+    isDebugRun = debugstr.lower() == "true"
+
     with open("progress.log", "a") as log_file:
         log_file.write(f"Form received with {numIterations}")
         log_file.write("Creating the inputsHTML now!")
@@ -103,11 +107,13 @@ def startSolver():
         "numClients":numClients,
         "numThreads": numThreads,
         "numRealDM": numRealDM,
-        "numEc2D": calcEc2D
+        "numEc2D": calcEc2D,
+        "debugCapacity": debugCapacity,
+        "isDebugRun": isDebugRun
     }
     inputsHTMLstr = json.dumps(inputsHTML)
     with open("IPC/inputsHTML.json","w") as f:
-        json.dump(inputsHTML,f)
+        json.dump(inputsHTML,f, indent=4)
     # Blocking process !!
     # os.system(f"python distmain.py {numIterations} > progress.log 2>&1")
 
@@ -134,6 +140,6 @@ def running():
 
 if __name__ == "__main__":
     # normal version
-    app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
-    #app.run(debug=True)
+    #app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
+    app.run(debug=True)
 
