@@ -69,27 +69,25 @@ class Res_Builder():
 
         combinedRealDM =[]
         combindedEc2D = []
-        print(f"{self.inputs['Realdm']} showcase")
         for ent in combinedFeasList:
             print(ent.get("DMUsedName"))
-            if ent.get("DMUsedName", self.inputs["Realdm"]):
+            if ent.get("DMUsedName") == self.inputs.get("Realdm"):
                 print("reached Real")
+                print(ent.get("DMUsedName"))
                 combinedRealDM.append(self.returnRes(ent,True))
             else:
                 print("reached ec2d")
+                print(ent.get("DMUsedName"))
                 combindedEc2D.append(self.returnRes(ent,False))
         return combinedRealDM,combindedEc2D
 
 def findBestinList(resList):
     for index, res in enumerate(resList):
-        currentBest = sys.maxsize -1
-        currentBestIndex = None
-        if res.best.distance() > currentBest:
-            currentBest = res.best.distance()
-            currentBestIndex = index
-    print(f"Best Val is: {currentBest} at listIndex: {currentBestIndex}")
+        sorted_list = sorted(resList, key=lambda x: x.best.distance())
+        currentBest = sorted_list[0].best.distance()
+    print(f"Best Val is: {currentBest}")
+    return sorted_list
     
-    return currentBest,currentBestIndex
 
 def importInputData(filepath):
     with open(filepath,"r") as f:
@@ -134,11 +132,20 @@ if __name__ == "__main__":
 
     importZipPathfirst = "Import_loc_for_resDict"
     # in importZiptpath put the name f the imported zip
-    importZipPath = os.path.join(importZipPathfirst,"combined_resDict_M40k.zip")
+    importZipPath = os.path.join(importZipPathfirst,"combined_resDictM40k.zip")
     resBuilder = Res_Builder_Factory(importZipPath)
     resListRealDM, resListEc2D = resBuilder.runRebuildCombinedResDict()
+    for res in resListRealDM:
+        print(res)
     for res in resListEc2D:
         print(res)
+    resListRealDMSorted = findBestinList(resListRealDM)
+    resListEc2DSorted = findBestinList(resListEc2D)
+    print(resListRealDMSorted[0])
+    print("\n\n")
+    print(resListEc2DSorted[0])
+
+
    
     #builder = Res_Builder(inputs,"f")
     #builder.retSplitJsonTEST("Import_loc_for_resDict/combinedresDict24k.json")
