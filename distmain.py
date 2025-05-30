@@ -60,7 +60,6 @@ def run():
     #setResDict(resDict)
     #print(f"END RUN with (setResDict())")
 
-    #very important
     #runpy.run_path("flask_endpoint.py", init_globals={"resDict": resDict})
 
 if __name__ == "__main__":

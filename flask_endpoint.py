@@ -43,8 +43,9 @@ def watcherFunction(pid):
             else:
                 with open("progress.log","a") as f2:
                     f2.write("process gone but waiting longer")
-        time.sleep(60)
+        time.sleep(20)
     
+    #The Zip gets created here once the watcher notices the end of the run!
     Result_Server().giveZipresDict()
 def extract_n(filename):
     match = re.search(r"n(\d+)",filename)
@@ -83,6 +84,57 @@ def serverSolver():
 
     city_names = list(city_matrices.keys())
     return render_template("solver.html",cities=city_names,filenames = filenames_list)
+@app.route("/solverBatch")
+def serverSolverBatch():
+    vrp_path = "data/Vrp-Set-X/X/"
+    sorted_files = sorted(os.listdir(vrp_path), key=extract_n)
+
+    filenames_list = [f[:-4] for f in sorted_files if f.endswith(".vrp")]
+
+    city_names = list(city_matrices.keys())
+    return render_template("solverBatch.html",cities=city_names,filenames = filenames_list)
+@app.route("/solveBatch", methods=["POST"])
+def startSolverBatch():
+    numIterations = request.form.get("iterations", type=int)
+    city = request.form.get("city", type=str)
+    vrp_file = request.form.get("vrp-file", type=str)
+    numClients = request.form.get("numClients", type=int)
+    numThreads = request.form.get("numThreads",type=int)
+    numRealDM = request.form.get("numRealDM",type=int)
+    calcEc2D = numThreads-numRealDM
+    debugCapacity = request.form.get("debugCapacity",type=int)
+    debugstr = request.form.get("isDebugRun", type=str)
+    isDebugRun = debugstr.lower() == "true"
+    inputsHTML = {
+            "numIterations": numIterations,
+            "city": city,
+            "vrp-file":vrp_file,
+            "numClients":numClients,
+            "numThreads": numThreads,
+            "numRealDM": numRealDM,
+            "numEc2D": calcEc2D,
+            "debugCapacity": debugCapacity,
+            "isDebugRun": isDebugRun
+        }
+    inputsHTMLstr = json.dumps(inputsHTML)
+    with open("IPC/inputsHTML.json","w") as f:
+
+            json.dump(inputsHTML,f, indent=4)
+    res_dir = "IPC/resDictThreads"
+    if os.path.exists(res_dir):
+        shutil.rmtree(res_dir)
+    if os.path.exists("IPC/combined_resDict.zip"):
+        os.remove("IPC/combined_resDict.zip")
+        with open("progress.log", "a") as abc:
+            abc.write("Deleted old Resdict. Now can rerun succesfully")
+    with open("progress.log", "a") as f:
+        process = subprocess.Popen(["python3","BatchQueue.py",inputsHTMLstr],
+                                   stdout=f,
+                                   stderr=f
+                               )
+    return redirect("/running")
+
+
 @app.route("/solve", methods=["POST"])
 def startSolver():
     numIterations = request.form.get("iterations", type=int)
@@ -121,6 +173,8 @@ def startSolver():
     res_dir = "IPC/resDictThreads"
     if os.path.exists(res_dir):
         shutil.rmtree(res_dir)
+    if os.path.exists("IPC/combined_resDict.zip"):
+        os.remove("IPC/combined_resDict.zip")
         with open("progress.log", "a") as abc:
             abc.write("Deleted old Resdict. Now can rerun succesfully")
     with open("progress.log", "a") as f:
@@ -140,6 +194,6 @@ def running():
 
 if __name__ == "__main__":
     # normal version
-    #app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
+    #app.run(debug=True)
 

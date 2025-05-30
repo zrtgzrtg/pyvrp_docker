@@ -4,6 +4,7 @@ from pyvrp import Result,Statistics,Solution
 import contextlib
 import pandas as pd
 import os
+from vrplib import read_instance
 
 
 class DataCreator():
@@ -14,12 +15,26 @@ class DataCreator():
         self.threadID = threadID
         self.seed = seed
         
+    def getDemandandCapa(self):
+        vrp_file_dir = "data/Vrp-Set-X/X"
+        x_set_file = os.path.join(vrp_file_dir,f"{self.X_set}.vrp")
+        instance = read_instance(x_set_file)
+        capa = instance["capacity"]
+        demandList = instance["demand"].tolist()
+        return capa, demandList
+
+
+
+
     def runStatistics(self):
         current_dir = os.path.dirname(__file__)
         location=f"output_from_res"
         filepath=os.path.join(current_dir,location)
         os.makedirs(f"{filepath}", exist_ok=True)
         output_file=os.path.join(filepath,f"{self.dataset}_{self.X_set}_{self.threadID}.csv")
+
+        capa, demandList = self.getDemandandCapa()
+
 
         self.res.stats.to_csv(output_file)
         pd_statistics_object = self.turn_data_to_dict(output_file)
@@ -32,7 +47,9 @@ class DataCreator():
             "DMUsedName": self.dataset,
             "X_setUsedName": self.X_set,
             "seed":self.seed,
-            "isFeasible":self.res.best.is_feasible()
+            "isFeasible":self.res.best.is_feasible(),
+            "CapacityUsed": capa,
+            "demandsUsed": demandList
         }
 
         

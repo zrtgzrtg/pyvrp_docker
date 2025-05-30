@@ -1,4 +1,5 @@
 from ProblemDataGenerator import ProblemDataGenerator
+import csv
 import pickle
 import shutil
 import zipfile
@@ -8,6 +9,7 @@ import json
 import rapidjson
 import os
 from data.city_matrices import city_matrices
+from tabulate import tabulate
 
 class Res_Builder():
     def __init__(self,inputs,resDictPathtmp,inputHTMLpassObj):
@@ -174,20 +176,124 @@ def importAndSaveToDB(zipName):
 def loadPickleBackup(zipName,indexRealDM,indexEc2D):
     with open(f"pickleDB/backups/{zipName}.pkl", "rb") as f:
         data = pickle.load(f)
-    print("-----------INPUTS-----------\n")
-    print(f"{data['inputHTML']}\n")
-    print("-----------BESTREALDM-----------\n")
-    print(f"{data['SortedRealDM'][indexRealDM]}\n")
-    print("-----------BESTEC2D-----------\n")
-    print(data["SortedEc2D"][indexEc2D])
- 
+    #print("-----------INPUTS-----------\n")
+    #print(f"{data['inputHTML']}\n")
+    #print("-----------BESTREALDM-----------\n")
+    #print(f"{data['SortedRealDM'][indexRealDM]}\n")
+    #print("-----------BESTEC2D-----------\n")
+    #print(data["SortedEc2D"][indexEc2D])
+    return data["inputHTML"],data["SortedRealDM"], data["SortedEc2D"], zipName
+
+def writeResFile(inputsHTML, SortedRealDMlist, SortedEc2Dlist, Zipname):
+    base_dir = "pickleDB/resFiles"
+    os.makedirs( base_dir, exist_ok=True)
+    with open(f"{base_dir}/{Zipname}_RESFILE.txt", "w") as f:
+        print("-----------INPUTS-----------\n", file=f)
+        print(f"{inputsHTML}\n", file=f)
+        print("-----------BESTRUN:REALDM-----------\n",file=f)
+        print(f"{SortedRealDMlist[0]}\n",file= f)
+        print("-----------BESTRUN:EC2D-----------\n", file=f)
+        print(f"{SortedEc2Dlist[0]}",file=f)
+
+
+        #print(f"-----------BEST:REALDM-----------\n",file=f)
+        #print(f"{SortedRealDMlist[0].best.distance()}\n",file= f)
+        totalRealDM = 0
+        totalResNumReal = 0
+        totalResRtimeRealDM = 0
+        totalNumRoutesRealDM = 0
+        for i,resRealDM in enumerate(SortedRealDMlist):
+            totalRealDM += resRealDM.best.distance()
+            totalResRtimeRealDM += resRealDM.runtime
+            totalNumRoutesRealDM += len(resRealDM.best.routes())
+            totalResNumReal += 1
+        #print("-----------AVG:REALDM-----------\n", file=f)
+        #print(f"Average distance RealDM: {totalRealDM/totalResNumReal}\n", file=f)
+        #print("-----------AVGRTIME:REALDM-----------\n", file=f)
+        #print(f"AVG Runtime: {totalResRtimeRealDM/totalResNumReal}\n",file=f)
+        #print("-----------NUMPROC:EC2D-----------\n", file=f)
+        #print(f"NUM Processes: {totalResNumReal}\n", file=f)
+        #print(f"-----------BEST:Ec2D-----------\n",file=f)
+        #print(f"{SortedEc2Dlist[0].best.distance()}\n",file= f)
+        totalEc2D = 0
+        totalResNumEc2D = 0
+        totalResRtimeEc2D = 0
+        totalNumRoutesEc2D = 0
+        for i,resEc2D in enumerate(SortedEc2Dlist):
+                   totalEc2D += resEc2D.best.distance()
+                   totalResRtimeEc2D += resEc2D.runtime
+                   totalNumRoutesEc2D += len(resEc2D.best.routes())
+                   totalResNumEc2D += 1
+        #print("-----------AVG:EC2D-----------\n", file=f)
+        #print(f"Average distance Ec2D: {totalEc2D/totalResNumEc2D}\n", file=f) 
+        #print("-----------AVGRTIME:EC2D-----------\n", file=f)
+        #print(f"AVG Runtime: {totalResRtimeEc2D/totalResNumEc2D}\n",file=f)
+        #print("-----------NUMPROC:EC2D-----------\n", file=f)
+        #print(f"NUM Processes: {totalResNumEc2D}\n", file=f)
+
+        headers = ["Type", "Best", "AvgDist", "AvgNumRoutes","NumProcesses", "AvgRtime"]
+
+        real_best_distance = SortedRealDMlist[0].best.distance()
+        real_avg_cost = totalRealDM / totalResNumReal
+        real_avg_routes = totalNumRoutesRealDM / totalResNumReal
+        real_num_results = totalResNumReal
+        real_avg_runtime = totalResRtimeRealDM / totalResNumReal
+
+        ec2d_best_distance = SortedEc2Dlist[0].best.distance()
+        ec2d_avg_cost = totalEc2D / totalResNumEc2D
+        ec2d_avg_routes = totalNumRoutesEc2D / totalResNumEc2D
+        ec2d_num_results = totalResNumEc2D
+        ec2d_avg_runtime = totalResRtimeEc2D / totalResNumEc2D
+
+        rows = [
+            ["RealDM", real_best_distance, real_avg_cost, real_avg_routes, real_num_results, real_avg_runtime],
+            ["EC2D", ec2d_best_distance, ec2d_avg_cost, ec2d_avg_routes, ec2d_num_results, ec2d_avg_runtime]
+        ]
+    headersAll = ["Type", "Distance", "vrp-file", "Dist-Matrix", "NumRoutes"  , "numClients", "Rtime", "NumIterations" ]
+    rowsAll = []  
+    for resRealDM in SortedRealDMlist:
+        rowsAll.append(["RealDM", resRealDM.best.distance(), inputsHTML["vrp-file"],
+                        city_matrices[f"{inputsHTML['city']}"][0],
+                        len(resRealDM.best.routes()),
+                        inputsHTML["numClients"],
+                        resRealDM.runtime,
+                        inputsHTML["numIterations"]
+                        ])
+    for resEc2D in SortedEc2Dlist:
+            rowsAll.append(["EC2D", resEc2D.best.distance(), inputsHTML["vrp-file"],
+                            city_matrices[f"{inputsHTML['city']}"][1],
+                            len(resEc2D.best.routes()),
+                            inputsHTML["numClients"],
+                            resEc2D.runtime,
+                            inputsHTML["numIterations"]
+                            ])
+
+
+
+
+    txt_path = f"{base_dir}/{Zipname}_RESFILE.txt"
+    with open(txt_path, "a") as f2:
+        f2.write("-----------BEST SUMMARY-----------\n")
+        f2.write(tabulate(rows, headers=headers, tablefmt="grid", floatfmt=".4f"))
+        f2.write("\n")
+        f2.write("-----------ALL SUMMARY-----------\n")
+        f2.write(tabulate(rowsAll,headers=headersAll, tablefmt="grid", floatfmt=".4f")) 
+    csv_path = os.path.splitext(txt_path)[0] + ".csv"
+    with open(csv_path, "w", newline="") as f_csv:
+        writer = csv.writer(f_csv)
+        writer.writerow(headers)
+        for row in rows:
+            writer.writerow(row)
+
+
 
 if __name__ == "__main__":
-    zipName = "32x20kChicago"
-    #importAndSaveToDB(zipName)
-
-    loadPickleBackup("32x20kChicago",0,0)
+    zipName = "16x15kChicago"
+    importAndSaveToDB(zipName)
+    inputsHTML, SortedRealDMlist, SortedEc2Dlist, zipName = loadPickleBackup("16x15kChicago",0,0)
+    writeResFile(inputsHTML,SortedRealDMlist,SortedEc2Dlist,zipName)
    
+
 
    
     #builder = Res_Builder(inputs,"f")
