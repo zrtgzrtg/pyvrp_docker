@@ -28,7 +28,11 @@ class Subprocess_Starter():
     def fill_TaskQueue(self):
         # type 1 = RealDM
         # type 2 = Ec2D
-        taskQueue = TaskQueue(4,"PLACEHOLDER")
+        cpu_countins = os.cpu_count()
+        if isinstance(cpu_countins,int):
+            taskQueue = TaskQueue(cpu_countins,"PLACEHOLDER")
+        else:
+            taskQueue = TaskQueue(4,"PLACEHOLDER")
         for i in range(self.numThreads):
             if self.numRealDM > 0:
                 subPTask1 = self.create_Task(1)
@@ -38,7 +42,7 @@ class Subprocess_Starter():
                 subPTask2 = self.create_Task(2)
                 taskQueue.addTask(subPTask2)
                 self.numEc2D -= 1
-        taskQueue.startTaskQueue()
+        i = taskQueue.startTaskQueue()
         print("task_queue fill function ran!")
     
     def createLogFiles(self):

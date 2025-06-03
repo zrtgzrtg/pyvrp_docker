@@ -11,3 +11,12 @@ Import_loc_for_resDict/
 runLogs/
 tmpZip/
 pickleDB/
+4coreStart.sh
+8coreStart.sh
+localTest.py
+utah.txt
+IPC/*.json
+IPC/*.zip
+IPC/resDictThreads/
+swapperResDir/*.json
+dict_batchQueue/*.json

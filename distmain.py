@@ -5,7 +5,6 @@ from pyvrp import Model
 from pyvrp.stop import MaxIterations
 from create_data_for_api import DataCreator
 import sys
-from shared import setResDict
 from Process_Starter import Subprocess_Starter
 from data.city_matrices import city_matrices
 

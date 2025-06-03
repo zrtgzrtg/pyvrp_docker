@@ -288,9 +288,9 @@ def writeResFile(inputsHTML, SortedRealDMlist, SortedEc2Dlist, Zipname):
 
 
 if __name__ == "__main__":
-    zipName = "16x15kChicago"
+    zipName = "abcde"
     importAndSaveToDB(zipName)
-    inputsHTML, SortedRealDMlist, SortedEc2Dlist, zipName = loadPickleBackup("16x15kChicago",0,0)
+    inputsHTML, SortedRealDMlist, SortedEc2Dlist, zipName = loadPickleBackup("abcde",0,0)
     writeResFile(inputsHTML,SortedRealDMlist,SortedEc2Dlist,zipName)
    
 

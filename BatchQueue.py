@@ -46,31 +46,57 @@ class BatchQueue():
             rs.giveZipresDict()
             # Now the is IPC/combined_resDict.json
             os.rename("IPC/combined_resDict.zip",f"{os.path.join(saveDir,vrpfile)}.zip")
+    def fourSpecialCase(self, TaskPath):
+        inputdict = "dict_batchQueue"
+        os.makedirs("dict_batchQueue/results", exist_ok=True)
+        
+        with open(f"{inputdict}/{TaskPath}","r") as f:
+            inputList = json.load(f)
+        for i, lists in enumerate(inputList):
+            x = list(lists.values())
+            self.startJob(x)
+            saveDir = "BatchCustom"
+            os.makedirs(saveDir,exist_ok=True)
+            rs = Result_Server()
+            rs.giveZipresDict()
+            # Now the is IPC/combined_resDict.json
+            os.rename("IPC/combined_resDict.zip",f"{os.path.join(saveDir,str(i))}.zip")
+    def readPOSTrequestToList(self,inputsHTMLstr):
+        inputsHTML = json.loads(inputsHTMLstr)
+        inputs={
+            "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
+            "X_set":inputsHTML["vrp-file"], # Instead of debug boolean assign debug.vrp here
+            "numClients": inputsHTML["numClients"]
+            }
+        inputsHTMLList = []
+        inputsHTMLList.append(city_matrices[f"{inputsHTML['city']}"][0])
+        inputsHTMLList.append(city_matrices[f"{inputsHTML['city']}"][1])
+        inputsHTMLList.append(inputs)
+        inputsHTMLList.append(inputsHTML["numThreads"])
+        inputsHTMLList.append(inputsHTML["numEc2D"])
+        inputsHTMLList.append(inputsHTML["numRealDM"])
+        inputsHTMLList.append(inputsHTML["numIterations"])
+        return inputsHTMLList
+
+
+
+
 
             
 
 
 
 if __name__ == "__main__":
-    inputsHTMLstr = sys.argv[1]
-    inputsHTML = json.loads(inputsHTMLstr)
-    inputs={
-        "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
-        "X_set":inputsHTML["vrp-file"], # Instead of debug boolean assign debug.vrp here
-        "numClients": inputsHTML["numClients"]
-        }
-    inputsHTMLList = []
-    inputsHTMLList.append(city_matrices[f"{inputsHTML['city']}"][0])
-    inputsHTMLList.append(city_matrices[f"{inputsHTML['city']}"][1])
-    inputsHTMLList.append(inputs)
-    inputsHTMLList.append(inputsHTML["numThreads"])
-    inputsHTMLList.append(inputsHTML["numEc2D"])
-    inputsHTMLList.append(inputsHTML["numRealDM"])
-    inputsHTMLList.append(inputsHTML["numIterations"])
-
-    # inputs at index [2]
+    #inputsHTMLstr = sys.argv[1]
     bq = BatchQueue()
-    bq.allVrpSetsOneCity(inputsHTMLList)
+    #inputsHTMList = bq.readPOSTrequestToList(inputsHTMLstr)
+    
+        ## inputs at index [2]
+    #bq = BatchQueue()
+    #bq.allVrpSetsOneCity(inputsHTMLList)
+    bq.fourSpecialCase("berkeRequest.json")
+
+
     
     
 

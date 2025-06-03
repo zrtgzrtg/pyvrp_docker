@@ -5,13 +5,22 @@ import time
 from ResultServer import Result_Server
 import psutil
 import subprocess   
-from flask import Flask, request, jsonify,render_template, redirect, send_file
+from flask import Flask, request, jsonify,render_template, redirect, send_file, abort
 from data.city_matrices import city_matrices
 import os
 import json
 import shutil
 
 app = Flask(__name__)
+
+def check_cpu_usage(request):
+    limit = 20
+    if request.method == "POST":
+        cpuPercent = psutil.cpu_percent(interval=2.0)
+        if cpuPercent > limit:
+            abort(503, description = "CPU overloaded. Probably running calculation!")
+
+        
 
 def is_process_alive(pid):
     try:
@@ -95,6 +104,7 @@ def serverSolverBatch():
     return render_template("solverBatch.html",cities=city_names,filenames = filenames_list)
 @app.route("/solveBatch", methods=["POST"])
 def startSolverBatch():
+    check_cpu_usage(request)
     numIterations = request.form.get("iterations", type=int)
     city = request.form.get("city", type=str)
     vrp_file = request.form.get("vrp-file", type=str)
@@ -137,6 +147,7 @@ def startSolverBatch():
 
 @app.route("/solve", methods=["POST"])
 def startSolver():
+    check_cpu_usage(request)
     numIterations = request.form.get("iterations", type=int)
     city = request.form.get("city", type=str)
     vrp_file = request.form.get("vrp-file", type=str)

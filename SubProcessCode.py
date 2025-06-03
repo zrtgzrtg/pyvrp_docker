@@ -25,14 +25,14 @@ def main():
         gen = ProblemDataGenerator(args["RealDMname"],args["X_set"],args["numClients"])
     else:
         gen = ProblemDataGenerator(args["Ec2DDMname"],args["X_set"],args["numClients"])
-    print(f"{args["RealDMname"]}\n,{args["X_set"]}\n,{args["numClients"]}\n")
 
 
     problemData = gen.getProblemData()
     model = Model.from_data(problemData)
     # nanoseconds since 1970 modulo max integer size
     timeseed = time.time_ns() % (2**32)
-    res = model.solve(stop=MaxIterations(args["numIterations"]),seed=timeseed)
+    res = model.solve(stop=MaxIterations(args["numIterations"])
+                      ,seed=timeseed)
     # if statement already determined gen based on modelType. Now calling gen for the right dm-name
     dataC = DataCreator(res,gen.distance_matrix_name,args["X_set"],args["ID"],timeseed)
     resDict = dataC.runStatistics()
