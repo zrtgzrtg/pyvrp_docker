@@ -65,6 +65,22 @@ class Swapper():
                 pass
         return allConnections
     
+    def findALLEntriesByID(self,ID,matrix_num=1):
+        allConnections = []
+        for entry in self.data1:
+            if entry["OriginID"] == ID or entry["DestinationID"] == ID:
+                allConnections.append(entry)
+            else:
+                pass
+        return allConnections
+    def findALLEntriesForSubset(self,IDSet,matrix_num=1):
+        allConnections = []
+        for entry in self.data1:
+            if entry["OriginID"] in IDSet and entry["DestinationID"] in IDSet:
+                allConnections.append(entry)
+            else:
+                pass
+        return allConnections
     def swapDistancesREALEC2DforEntry(self,OriginID):
         realDMOrigin = self.findEntriesByOriginID(OriginID,1)
         realDMDestination = self.findEntriesByDestinationID(OriginID,1)
@@ -108,6 +124,11 @@ class Swapper():
         self.importMatrix(2)
         self.fillSwapResult(OriginID)
         self.writeToFile(name)
+    
+    def retAllEntriesForSubset(self,IDSet):
+        self.importMatrix()
+        # print(self.findALLEntriesByID(ID))
+        return self.findALLEntriesForSubset(IDSet)
     
     def testSwapFile(self,OriginID,name):
         data = None
