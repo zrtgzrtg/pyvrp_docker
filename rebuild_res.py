@@ -293,18 +293,14 @@ if __name__ == "__main__":
     inputsHTML, SortedRealDMlist, SortedEc2Dlist, zipName = loadPickleBackup("abcde",0,0)
     writeResFile(inputsHTML,SortedRealDMlist,SortedEc2Dlist,zipName)
    
-
-
-   
     #builder = Res_Builder(inputs,"f")
     #builder.retSplitJsonTEST("Import_loc_for_resDict/combinedresDict24k.json")
-
 
     #resB = Res_Builder(inputs,importZipPath) 
     #resListRealDM,resListEc2D = resB.runRebuildCombinedResDict()
     inputs={
-           "Realdm":"Chicago_100x100_RoadData", # THIS IS THE DM USED FOR PROBLEMDATA!!! ALWAYS MAKE SURE YOU IMPORT EUCLIDIAN OR REALDM
-           "Ec2Ddm":"Chicago_100x100_EuclideanData",
+           "Realdm":"100SampleMunichRealDM", # THIS IS THE DM USED FOR PROBLEMDATA!!! ALWAYS MAKE SURE YOU IMPORT EUCLIDIAN OR REALDM
+           "Ec2Ddm":"100SampleMunichEc2d",
            "X_set":"X-n101-k25",
            "numClients":"99"
            }

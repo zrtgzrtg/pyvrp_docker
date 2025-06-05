@@ -5,11 +5,10 @@ import geopandas as gpd
 
 # ——— CONFIGURATION ———
 # Folder where your solution txts now live (with headers + “Route #i:” lines)
-TXT_DIR      = Path(r"C:\Users\berks\OneDrive\Masaüstü\Project-Study\pyvrp_docker\outputs_txt")
+TXT_DIR      = Path(r"")
 # Where to dump the point‐stop shapefiles
-OUTPUT_DIR   = Path(r"C:\Users\berks\OneDrive\Masaüstü\Project-Study\pyvrp_docker\vrp_stops_visualization\Utah_GroceryStores_1161x1161_solution_stops")
-# POINTS_GDB   = r"C:\Users\berks\OneDrive\Belgeler\ArcGIS\Projects\Project-Study_Playground&Research\Project-Study_Playground&Research.gdb"
-POINTS_GDB   = r"C:\Users\berks\OneDrive\Belgeler\ArcGIS\Projects\Project-Study_US_Data\Project-Study_US_Data.gdb"
+OUTPUT_DIR   = Path(r"")
+POINTS_GDB   = r""
 POINTS_LAYER = "UtahStores_Small_WGS84"
 ID_FIELD     = "ID"
 CRS          = "EPSG:4326"
