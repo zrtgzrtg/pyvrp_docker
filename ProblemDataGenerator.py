@@ -8,6 +8,7 @@ import os
 import json
 import random
 import pyvrp
+import rapidjson
 
 class ProblemDataGenerator():
     def __init__(self,distance_matrix_name: str,X_scenario: str, numClients: int):
@@ -34,7 +35,7 @@ class ProblemDataGenerator():
             print(f"{filepath} is not valid!")
             #raise FileNotFoundError(f"{distance_matrix_name} not found!")
         with open(filepath,"r") as f:
-            self.distance_matrix_raw = json.load(f)
+            self.distance_matrix_raw = rapidjson.load(f)
 
     def convert_distance_matrix(self):
         if self.distance_matrix_raw is None:

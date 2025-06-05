@@ -144,6 +144,8 @@ class Sampler():
         
         self.zipAll(dirpath,self.saveName)
 
+        # N*10 = 100 --> 1000 1000 --> 10000 --> 
+
         #self.saveToFile(entries,dirpath)
         #self.saveIDSet(dirpath,list(idSet))
     
@@ -179,4 +181,12 @@ class Sampler():
 if __name__ == "__main__":
     s = Sampler("Munich1747",99,True,"100SampleMunichEc2d")
     s.saveAllToZip()
+
+    with open(pathToPartnerID.json,"r") as f:
+        data = rapidjson.load(f)
+    for k,v in data:
+        data[v] = k
+
+    id !
+    data[id] = oldID
 
