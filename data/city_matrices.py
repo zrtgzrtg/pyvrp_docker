@@ -3,7 +3,8 @@ city_matrices = {
     "Munich1747": ("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData"),
     "Utah1161": ("Utah_GroceryStores_1161x1161_RoadData","Utah_GroceryStores_1161x1161_EuclideanData"),
     "Utah100": ("Utah_GroceryStores_100x100_RoadData","Utah_GroceryStores_100x100_EuclideanData"),
-    "Munich100Sample": ("100SampleMunichRealDM", "100SampleMunichEc2d")
+    "Munich100Sample": ("100SampleMunichRealDM", "100SampleMunichEc2d"),
+    "Munich1747Ec2dDepot": ("Munich_Full_Ec2d_Depot", "Munich_Full_Ec2d_Depot")
 }
 city_matrices_TESTING = {
     "Chicago100": ("Chicago_100x100_RoadData","Chicago_100x100_EuclideanData"),
@@ -15,11 +16,12 @@ city_matrices_TESTING = {
 }
 
 city_sizes = {
-     "Chicago100": 100,
+    "Chicago100": 100,
     "Munich1747": 1747,
     "Utah1161": 1161,
     "Utah100": 100,
-    "Munich100Sample":100
+    "Munich100Sample":100,
+    "Munich1747Ec2dDepot": 1747
 }
 city_sizes_TESTING = {
     "Chicago100": 100,

@@ -7,7 +7,7 @@ import sys
 from Process_Starter import Subprocess_Starter
 
 def run(realDM,Ec2DDM,inputs,numThreads,numEc2D,numRealDM,numIterations):
-    subprocessstarter = Subprocess_Starter(realDM,Ec2DDM,inputs,numThreads,numEc2D,numRealDM,numIterations)
+    subprocessstarter = Subprocess_Starter(realDM,Ec2DDM,inputs,numThreads,numEc2D,numRealDM,numIterations,False)
     subprocessstarter.doEverything()
     pass
 

@@ -11,9 +11,9 @@ from Swapper import Swapper
 
 class Sampler():
     def __init__(self,city,sampleSize,isRealDM,saveName):
-        self.realDM = city_matrices_TESTING[city][0]
-        self.ec2dDM = city_matrices_TESTING[city][1]
-        self.citySize = city_sizes_TESTING[city]
+        self.realDM = city_matrices[city][0]
+        self.ec2dDM = city_matrices[city][1]
+        self.citySize = city_sizes[city]
         self.sampleSize = sampleSize
         self.isRealDM = isRealDM
         self.saveName = saveName
@@ -179,7 +179,16 @@ class Sampler():
 
 
 if __name__ == "__main__":
-    s = Sampler("Munich1747",99,True,"100SampleMunichEc2d")
-    s.saveAllToZip()
+    #this is original
+    #s = Sampler("Munich1747",99,True,"100SampleMunichEc2d")
+    for i in range(10):
+        x = i*100 + 99
+        y = f"{x+1}SampleMunichEc2d"
+
+        s = Sampler("Munich1747",x,True,y)
+        s.saveAllToZip()
+        src = f"samplerResDir/{y}"
+        dst = f"SamplesUSED/{y}"
+        os.rename(src,dst)
 
     

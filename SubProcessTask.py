@@ -9,13 +9,14 @@ import time
 
 # DONT FORGET to implement different seeds
 class SubProcessTask():
-    def __init__(self,modelType,inputs,numIterations,ID,RealDMname,Ec2DDMname):
+    def __init__(self,modelType,inputs,numIterations,ID,RealDMname,Ec2DDMname,collectStats):
         self.modelType = modelType
         self.inputs = inputs
         self.numIterations = numIterations
         self.ID = ID
         self.RealDMname = RealDMname
         self.Ec2DDMname = Ec2DDMname
+        self.collectStats = collectStats
     
     def start(self):
         #implement start logic here with open logfile, random seed and resDict implementation
@@ -38,6 +39,7 @@ class SubProcessTask():
             "ID":self.ID,
             "RealDMname":self.RealDMname,
             "Ec2DDMname":self.Ec2DDMname,
+            "collectStats": self.collectStats
         }
         inputDictjson = json.dumps(inputDict)
 

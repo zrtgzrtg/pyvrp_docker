@@ -21,3 +21,5 @@ IPC/resDictThreads/
 swapperResDir/*.json
 dict_batchQueue/*.json
 samplerResDir/*
+Plottest/
+SamplesUSED/

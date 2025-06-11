@@ -161,7 +161,7 @@ class Swapper():
 
 
 if __name__ == "__main__":
-    s = Swapper("Munich_DHL_10x10_RoadData","Munich_DHL_10x10_EuclideanData")
-    name = "firstTest"
+    s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
+    name = "Munich_Full_Ec2d_Depot"
     s.fullSwapFile(1,name)
     s.testSwapFile(1,name)

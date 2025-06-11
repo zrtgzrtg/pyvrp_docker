@@ -6,7 +6,7 @@ from TaskQueue import TaskQueue
 from SubProcessTask import SubProcessTask
 
 class Subprocess_Starter():
-    def __init__(self, RealDMname,Ec2DDMname,inputs,numThreads: int,numEc2D: int,numRealDM: int, numIterations: int):
+    def __init__(self, RealDMname,Ec2DDMname,inputs,numThreads: int,numEc2D: int,numRealDM: int, numIterations: int,collectStats=True):
         self.RealDMname = RealDMname
         self.Ec2dDMname = Ec2DDMname
         self.inputs = inputs
@@ -16,6 +16,7 @@ class Subprocess_Starter():
         self.taskQueue = None
         self.numIterations = numIterations
         self.counter = 1
+        self.collectStats = collectStats
 
     def checkInputs(self):
         if not all(isinstance(x, int) for x in (self.numThreads,self.numEc2D,self.numRealDM,self.numIterations)):
@@ -70,12 +71,12 @@ class Subprocess_Starter():
 
     def create_Task(self, type):
         if type == 1:
-            task = SubProcessTask("RealDM",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname)
+            task = SubProcessTask("RealDM",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname,self.collectStats)
             print(f"RealDM process with ID: {self.counter} created! \n")
             self.counter += 1
             return task
         else:
-            task = SubProcessTask("Ec2D",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname)
+            task = SubProcessTask("Ec2D",self.inputs,self.numIterations,self.counter,self.RealDMname,self.Ec2dDMname,self.collectStats)
             print(f"Ec2D process with ID: {self.counter} created!\n")
             self.counter += 1
             return task

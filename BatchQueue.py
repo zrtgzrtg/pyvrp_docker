@@ -26,6 +26,7 @@ class BatchQueue():
                                   stderr=f
                                   )
         p.wait()
+        # 10 runs of N*10
 
 
 
@@ -61,6 +62,10 @@ class BatchQueue():
             rs.giveZipresDict()
             # Now the is IPC/combined_resDict.json
             os.rename("IPC/combined_resDict.zip",f"{os.path.join(saveDir,str(i))}.zip")
+    
+
+
+        
     def readPOSTrequestToList(self,inputsHTMLstr):
         inputsHTML = json.loads(inputsHTMLstr)
         inputs={
@@ -87,14 +92,14 @@ class BatchQueue():
 
 
 if __name__ == "__main__":
-    #inputsHTMLstr = sys.argv[1]
+    inputsHTMLstr = sys.argv[1]
     bq = BatchQueue()
-    #inputsHTMList = bq.readPOSTrequestToList(inputsHTMLstr)
+    inputsHTMList = bq.readPOSTrequestToList(inputsHTMLstr)
     
         ## inputs at index [2]
-    #bq = BatchQueue()
-    #bq.allVrpSetsOneCity(inputsHTMLList)
-    bq.fourSpecialCase("berkeRequest.json")
+    bq = BatchQueue()
+    bq.allVrpSetsOneCity(inputsHTMList)
+    #bq.fourSpecialCase("berkeRequest.json")
 
 
     

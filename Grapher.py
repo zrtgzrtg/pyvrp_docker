@@ -18,64 +18,60 @@ from pyvrp.plotting import (
 )
 
 class Grapher():
-    def __init__(self,problemData,result,uniqueID,dirpath="Plottest"):
+    def __init__(self,problemData,result,dirpath="Plottest"):
         self.problemData = problemData
         self.result = result
-        self.uniqueID = str(uniqueID)
         self.dirpath = dirpath
         os.makedirs(self.dirpath,exist_ok=True)
     
     def createGraphs(self):
-        solution = self.result.best
+        # run createGraphs to fullfill everything in this class
 
         plots = [
-            ("coordinates", lambda: plot_coordinates(self.problemData)),
             ("demands", lambda: plot_demands(self.problemData)),
-            ("instance", lambda: plot_instance(self.problemData)),
-            ("solution", lambda: plot_solution(self.problemData, solution)),
-            ("route_schedule", lambda: plot_route_schedule(self.problemData, solution)),
             ("diversity", lambda: plot_diversity(self.result)),
             ("objectives", lambda: plot_objectives(self.result)),
-            ("result", lambda: plot_result(self.result,self.problemData)),
             ("runtimes", lambda: plot_runtimes(self.result)),
         ]
 
         for name, plot_func in plots:
-            try:
-                fig, ax = plot_func()
-                fig.savefig(os.path.join(self.dirpath, f"{name}{self.uniqueID}.png"))
-                plt.close(fig)
-                print(f"Saved {name}{self.uniqueID} plot to {os.path.join(self.dirpath, f'{name}{self.uniqueID}.png')}")
-            except Exception as e:
-                print(f"Could not create/save {name}{self.uniqueID}: {e}") 
+            self.genGraphSolution(name,plot_func)
 
-    def genGraphSolution(self):
+    def genGraphSolution(self,name,plot_func):
         fig = plt.figure(figsize=(15, 9))
-        plot_result(self.result, self.problemData, fig)
+        plot_func()
         fig.tight_layout()
-        ProblemSolutionName=f"Solution{self.uniqueID}.png"
-        filepath = f"{os.path.join(self.dirpath,str(self.uniqueID))}.png"
+        filepath = f"{os.path.join(self.dirpath,name)}.png"
         plt.savefig(filepath, dpi=300,bbox_inches="tight")
         plt.close(fig)
-        print(f"Solution saved as {ProblemSolutionName} under {filepath}")
+
+        # works:
+        # plot_demands
+        # plot_diversity
+        # plot_result
+        # works but useless:
+        # plot_instance
+        # plot_results
 
 
 
-if __name__ == "__main__":
+
+
+#if __name__ == "__main__":
     #zipName = "abcde"
     #importAndSaveToDB(zipName)
     #inputsHTML, SortedRealDMlist, SortedEc2Dlist, zipName = loadPickleBackup("abcde",0,0)
     #writeResFile(inputsHTML,SortedRealDMlist,SortedEc2Dlist,zipName)
 
-    pg = ProblemDataGenerator("100SampleMunichRealDM","X-n101-k25",99)
-    pd = pg.getProblemData()
-    model = Model.from_data(pd)
-    print(pd.location())
-    res = model.solve(stop=MaxIterations(2000))
-    g = Grapher(pd,res,0)
-    g.genGraphSolution()
+    #pg = ProblemDataGenerator("100SampleMunichRealDM","X-n101-k25",99)
+    #pd = pg.getProblemData()
+    #model = Model.from_data(pd)
+    #res = model.solve(stop=MaxIterations(1000))
+    #g = Grapher(pd,res,"Plottest")
+    #g.createGraphs()
 
        
+
 
     
 

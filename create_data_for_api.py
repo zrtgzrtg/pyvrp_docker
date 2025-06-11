@@ -26,7 +26,7 @@ class DataCreator():
 
 
 
-    def runStatistics(self):
+    def runStatistics(self,collectStats=True):
         current_dir = os.path.dirname(__file__)
         location=f"output_from_res"
         filepath=os.path.join(current_dir,location)
@@ -35,10 +35,15 @@ class DataCreator():
 
         capa, demandList = self.getDemandandCapa()
 
+        pd_statistics_object = "No Stats collected!"
 
-        self.res.stats.to_csv(output_file)
-        pd_statistics_object = self.turn_data_to_dict(output_file)
-        # THIS IS THE STRUCTURE OF RESDICT
+        if collectStats:
+            self.res.stats.to_csv(output_file)
+            pd_statistics_object = self.turn_data_to_dict(output_file)
+
+
+        
+        # THIS IS THE STRUCTURE OF RES#DICT
         return {
             "routes": self.get_best_output(),
             "stats": pd_statistics_object,
@@ -90,6 +95,9 @@ class DataCreator():
     
     def build_from_resdict(self,resDict,problemData):
         # if resDict is Feasible IMPLEMENTATION
+
+        if resDict["stats"] == "No Stats collected!":
+            resDict["stats"] = Statistics()
         
         res = Result(Solution(problemData,resDict["routes"]),resDict["stats"],int(resDict["num_iterations"]),float(resDict["runtime"]))
         return res
