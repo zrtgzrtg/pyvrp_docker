@@ -9,6 +9,7 @@ output_from_res/
 reminder_start.txt
 Import_loc_for_resDict/
 data/distance_matrices/*.json
+data/distance_matrices/
 runLogs/
 tmpZip/
 pickleDB/
@@ -24,3 +25,5 @@ dict_batchQueue/*.json
 samplerResDir/*
 SamplesUSED/
 Plottest/
+data/runFiles/
+samplerHelpDir/

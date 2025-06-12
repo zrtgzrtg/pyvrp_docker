@@ -266,8 +266,8 @@ if __name__ == "__main__":
     #    src = f"samplerResDir/{y}"
     #    dst = f"SamplesUSED/{y}"
     #    os.rename(src,dst)
-    for i in range(30):
-        x = 199
+    for i in range(1000):
+        x = 99
         y = f"{x+1}MunichSampleDMS_ID{i}"
 
         s = Sampler("Munich1747",x,0,y,"Munich1747Ec2dRealDepot")
@@ -275,8 +275,8 @@ if __name__ == "__main__":
         s.sampleAll3DMs(i)
         os.makedirs("SamplesUSED",exist_ok=True)
         src = f"samplerResDir/{y}"
-        os.makedirs("SamplesUSED/200x30MunichSamples",exist_ok=True)
-        dst = f"SamplesUSED/200x30MunichSamples/{y}"
+        os.makedirs("SamplesUSED/100x1000MunichSamples",exist_ok=True)
+        dst = f"SamplesUSED/100x1000MunichSamples/{y}"
         os.rename(src,dst)
 
     

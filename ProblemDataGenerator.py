@@ -36,7 +36,7 @@ class ProblemDataGenerator():
         else :
             filename = self.distance_matrix_name
 
-        location = os.path.join("data",self.parentDir,filename)
+        location = os.path.join("data","distance_matrices",filename)
         filepath = os.path.join(current_dir, location)
         if not os.path.isfile(filepath):
             print(f"{filepath} is not valid!")
