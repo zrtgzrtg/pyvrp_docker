@@ -10,13 +10,16 @@ from Swapper import Swapper
 
 
 class Sampler():
-    def __init__(self,city,sampleSize,isRealDM,saveName):
+    def __init__(self,city,sampleSize,isRealDM,saveName,specialDM=None,idSet=None,partnerSet=None):
         self.realDM = city_matrices[city][0]
         self.ec2dDM = city_matrices[city][1]
         self.citySize = city_sizes[city]
         self.sampleSize = sampleSize
         self.isRealDM = isRealDM
         self.saveName = saveName
+        self.specialDM = city_matrices[specialDM][0]
+        self.idSet = idSet
+        self.partnerSet = partnerSet
 
     def sampleXamountID(self,x):
         rng = np.random.default_rng()
@@ -28,10 +31,12 @@ class Sampler():
         return sampled_ids_set
     
     def findAllEntriesFromSampledID(self,sample_set,isRealDM):
-        if isRealDM:
+        if isRealDM == 1:
             s = Swapper(self.realDM)
-        else:
+        elif (isRealDM==0):
             s = Swapper(self.ec2dDM)
+        elif(isRealDM==2):
+            s = Swapper(self.specialDM)
         idSet = sample_set
         print(f"idSet {idSet}")
         return s.retAllEntriesForSubset(idSet)
@@ -72,6 +77,11 @@ class Sampler():
             renameDict[id] = i
         # For some crazy javascript type reason python mutates the original IdSet in remove
         idSet.add(1)
+        # converting numpy ints into normal json serializable ints
+        #renameDict = {int(k): int(v) for k, v in renameDict.items()}
+
+        with open("samplerHelpDir/partnerIDS","w") as f:
+            json.dump(renameDict,f,indent=4)
         return renameDict
     
     def mutateSampledDMToUsableDM(self,entries,partnerSet):
@@ -125,22 +135,22 @@ class Sampler():
        
 
         sample_set = self.sampleXamountID(self.sampleSize)
-        partnerSet = s.findRenameForIDS(sample_set)
+        partnerSet = self.findRenameForIDS(sample_set)
         print(partnerSet)
         entries = self.findAllEntriesFromSampledID(sample_set,self.isRealDM)
         # python mutating original values in place. This is workaround dont change order!
         varOrgEntries = "OrgEntries.json"
-        s.saveXFile(entries,dirpath,varOrgEntries)
+        self.saveXFile(entries,dirpath,varOrgEntries)
 
         UsableDM = self.mutateSampledDMToUsableDM(entries,partnerSet)
-        s.testSampledDM(UsableDM,os.path.join(dirpath,varOrgEntries),partnerSet)
+        self.testSampledDM(UsableDM,os.path.join(dirpath,varOrgEntries),partnerSet)
 
-        s.saveXFile(list(sample_set),dirpath,"ChosenIDs.json")
+        self.saveXFile(list(sample_set),dirpath,"ChosenIDs.json")
         partnerSetSaveable = {}
         for k,v in partnerSet.items():
             partnerSetSaveable[str(k)] = v
-        s.saveXFile(partnerSetSaveable,dirpath,"PartnerIDS.json")
-        s.saveXFile(UsableDM,dirpath,"NewSampledDM.json")
+        self.saveXFile(partnerSetSaveable,dirpath,"PartnerIDS.json")
+        self.saveXFile(UsableDM,dirpath,"NewSampledDM.json")
         
         self.zipAll(dirpath,self.saveName)
 
@@ -165,7 +175,60 @@ class Sampler():
             full_path = os.path.join(dirpath,file)
             if full_path != zip_path and os.path.isfile(full_path):
                 os.remove(full_path)
-            
+
+    def setupSampleAll3DMs(self):
+        self.idSet = self.sampleXamountID(self.sampleSize)
+        self.partnerSet = self.findRenameForIDS(self.idSet)
+        print(self.idSet)
+        print(self.partnerSet)
+        print(self.specialDM)
+
+    def sampleAll3DMs(self,id=None):
+        dir = "samplerResDir"
+        os.makedirs(dir,exist_ok=True)
+        os.makedirs(f"{dir}/{self.saveName}",exist_ok=True)
+        dirpath = os.path.join(dir,self.saveName)
+        if self.idSet == None or self.partnerSet == None or self.specialDM== None:
+            raise AssertionError(f"generate necessary stuff first! specialDM = {self.specialDM}")
+        
+        for x in range(3):
+            with open("samplerHelpDir/partnerIDS", "r") as f1:
+                partnerSet_str = json.load(f1)
+                sample_set_str = list(partnerSet_str.keys())
+
+                sample_set = []
+                for d in sample_set_str:
+                    sample_set.append(int(d))
+                partnerSet = {int(k): v for k,v in partnerSet_str.items()}
+
+                entries = self.findAllEntriesFromSampledID(sample_set,x)
+                varOrgEntries = f"OrgEntries{x}.json"
+                self.saveXFile(entries,dirpath,varOrgEntries)
+                UsableDM = self.mutateSampledDMToUsableDM(entries,partnerSet)
+                self.testSampledDM(UsableDM,os.path.join(dirpath,varOrgEntries),partnerSet)
+                if x == 0:
+                    name = f"{self.sampleSize+1}Ec2dSampleMunich.json"
+                elif(x==1):
+                    name = f"{self.sampleSize+1}RealSampleMunich.json"
+                elif(x==2):
+                    name = f"{self.sampleSize+1}Ec2dWithRealDepotSampleMunich.json"
+                
+
+                self.saveXFile(UsableDM,dirpath,name)
+        os.rename("samplerHelpDir/partnerIDS",f"{dirpath}/partnerIDS.json")
+
+        if id is None:
+            self.zipAll(dirpath,f"{self.sampleSize+1}allMunichSampleDMS")
+        else : 
+            self.zipAll(dirpath,f"{self.sampleSize+1}MunichSamples_ID{id}")
+
+        
+
+
+        
+
+        
+        
 
 
 
@@ -180,15 +243,40 @@ class Sampler():
 
 if __name__ == "__main__":
     #this is original
-    #s = Sampler("Munich1747",99,True,"100SampleMunichEc2d")
-    for i in range(10):
-        x = i*100 + 99
-        y = f"{x+1}SampleMunichEc2d"
+    # 1 is for realdm
+    # 0 is for ec2dm
+    # 2 is for specialdm
+    
+    #s = Sampler("Munich1747",99,0,"AllMunichSampleDMs","Munich1747Ec2dRealDepot")
+    #s.setupSampleAll3DMs()
+    #s.sampleAll3DMs()
 
-        s = Sampler("Munich1747",x,True,y)
-        s.saveAllToZip()
+    #s = Sampler("Munich1747",99,1,"100SampleMunichEc2d")
+    #s.saveAllToZip()
+
+    # This is how i got the distance matrices
+    #for i in range(10):
+    #    x = i*100 + 99
+    #    y = f"{x+1}allMunichSampleDMS"
+
+    #    s = Sampler("Munich1747",x,0,y,"Munich1747Ec2dRealDepot")
+    #    s.setupSampleAll3DMs()
+    #    s.sampleAll3DMs()
+    #    os.makedirs("SamplesUSED",exist_ok=True)
+    #    src = f"samplerResDir/{y}"
+    #    dst = f"SamplesUSED/{y}"
+    #    os.rename(src,dst)
+    for i in range(30):
+        x = 199
+        y = f"{x+1}MunichSampleDMS_ID{i}"
+
+        s = Sampler("Munich1747",x,0,y,"Munich1747Ec2dRealDepot")
+        s.setupSampleAll3DMs()
+        s.sampleAll3DMs(i)
+        os.makedirs("SamplesUSED",exist_ok=True)
         src = f"samplerResDir/{y}"
-        dst = f"SamplesUSED/{y}"
+        os.makedirs("SamplesUSED/200x30MunichSamples",exist_ok=True)
+        dst = f"SamplesUSED/200x30MunichSamples/{y}"
         os.rename(src,dst)
 
     

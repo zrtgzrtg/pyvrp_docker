@@ -31,13 +31,13 @@ class DataCreator():
         location=f"output_from_res"
         filepath=os.path.join(current_dir,location)
         os.makedirs(f"{filepath}", exist_ok=True)
-        output_file=os.path.join(filepath,f"{self.dataset}_{self.X_set}_{self.threadID}.csv")
 
         capa, demandList = self.getDemandandCapa()
 
         pd_statistics_object = "No Stats collected!"
 
         if collectStats:
+            output_file=os.path.join(filepath,f"{self.dataset}_{self.X_set}_{self.threadID}.csv")
             self.res.stats.to_csv(output_file)
             pd_statistics_object = self.turn_data_to_dict(output_file)
 

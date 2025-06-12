@@ -29,7 +29,14 @@ class ProblemDataGenerator():
 
     def import_distance_matrix(self):
         current_dir = os.path.dirname(__file__)
-        location = f"data/distance_matrices/{self.distance_matrix_name}.json"
+        #old line
+        #location = f"data/distance_matrices/{self.distance_matrix_name}.json"
+        if not self.distance_matrix_name.endswith(".json"):
+            filename = self.distance_matrix_name + ".json"
+        else :
+            filename = self.distance_matrix_name
+
+        location = os.path.join("data",self.parentDir,filename)
         filepath = os.path.join(current_dir, location)
         if not os.path.isfile(filepath):
             print(f"{filepath} is not valid!")
