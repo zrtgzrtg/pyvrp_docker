@@ -52,6 +52,6 @@ class Loader():
 
 
 if __name__=="__main__":
-    l = Loader("SamplesUSED/100x100MunichSamplestest1")
+    l = Loader("SamplesUSED/100x500MunichSamples")
     l.findAndExtractFiles()
-    l.createEntryInDistance_Matrices("50x100MunichTest")
+    l.createEntryInDistance_Matrices("100x500MunichTest")

@@ -215,8 +215,8 @@ if __name__ == "__main__":
 
     bq = BatchQueue()
     # outputs to data/runFiles und given name
-    #bq.createRunningFile("50x100MunichTest","debug",99,8,6,500,"50xSampleRun")
-    bq.runRunningFile("50xSampleRun")
+    bq.createRunningFile("100x500MunichTest","debug",499,8,6,500,"500xSampleRun")
+    #bq.runRunningFile("200xSampleRun")
 
 
     

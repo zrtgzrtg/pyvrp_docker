@@ -1,17 +1,53 @@
 #!/bin/bash
 
-read -p "Enter the instance name:  " instance_name 
+set -e  # Exit immediately on error
+
+read -p "Enter the instance name:  " instance_name
 read -p "Enter the zone: " zone
 
-# Build and save Docker image
-echo "Saving Docker image..."
-docker build -t pyvrp_docker_uploadable .
-docker save pyvrp_docker_uploadable > pyvrp_docker_uploadable.tar
+# Define image name
+IMAGE_NAME="pyvrp_docker_uploadable"
+TAR_NAME="$IMAGE_NAME.tar"
 
-# Copy Docker image and startup script to the VM
-echo "Copying image and startup script to VM..."
-gcloud compute scp pyvrp_docker_uploadable.tar start_container.sh $instance_name:~ --zone="$zone"
+# 🐳 Build Docker image with no cache
+echo "🚧 Building Docker image with --no-cache..."
+docker build --no-cache --pull -t $IMAGE_NAME .
 
-# Run the startup script remotely
-echo "Running startup script on VM..."
+# 💾 Save Docker image as .tar file
+echo "💾 Saving image to $TAR_NAME..."
+docker save $IMAGE_NAME -o $TAR_NAME
+
+# 📤 Copy Docker image and startup script to VM
+echo "📤 Copying image and startup script to VM..."
+gcloud compute scp $TAR_NAME start_container.sh "$instance_name:~" --zone="$zone"
+
+# 🚀 Run the startup script remotely
+echo "🚀 Running startup script on VM..."
 gcloud compute ssh "$instance_name" --zone="$zone" --command="bash start_container.sh"
+#!/bin/bash
+
+set -e  # Exit immediately on error
+
+read -p "Enter the instance name:  " instance_name
+read -p "Enter the zone: " zone
+
+# Define image name
+IMAGE_NAME="pyvrp_docker_uploadable"
+TAR_NAME="$IMAGE_NAME.tar"
+
+# 🐳 Build Docker image with no cache
+echo "🚧 Building Docker image with --no-cache..."
+docker build --no-cache --pull -t $IMAGE_NAME .
+
+# 💾 Save Docker image as .tar file
+echo "💾 Saving image to $TAR_NAME..."
+docker save $IMAGE_NAME -o $TAR_NAME
+
+# 📤 Copy Docker image and startup script to VM
+echo "📤 Copying image and startup script to VM..."
+gcloud compute scp $TAR_NAME start_container.sh "$instance_name:~" --zone="$zone"
+
+# 🚀 Run the startup script remotely
+echo "🚀 Running startup script on VM..."
+gcloud compute ssh "$instance_name" --zone="$zone" --command="bash start_container.sh"
+
