@@ -100,6 +100,51 @@ class BatchQueue():
             dmPathList.append(ScenarioForOneID)
         return dmPathList
     
+
+    # This is a help method to only sample ID0 since all are runtime restricted!!!
+    # Only change is the if statement
+
+    def getDMpathsOnlyID0(self,dirpath):
+        parentpath = "data/distance_matrices/"
+        path = os.path.join(parentpath,dirpath)
+        dmPathList = []
+        
+        for dirs in os.listdir(path):
+            if dirs == "ID0":
+                realDM = ""
+                ec2dDM = ""
+                specialCaseList = []
+                fullpath = os.path.join(path,dirs)
+                for caseDir in os.listdir(fullpath):
+                    casepath = os.path.join(fullpath,caseDir)
+                    if caseDir == "normalCase":
+                        for dm in os.listdir(casepath):
+                            filepath = os.path.join(casepath,dm)
+                            parts = filepath.split(os.sep)
+                            new_filepath = os.path.join(*parts[2:])
+                            if "Real" in dm:
+                                realDM = new_filepath
+                            else:
+                                ec2dDM = new_filepath
+                    elif (caseDir == "specialCases"):
+                        for dm in os.listdir(casepath):
+                            filepath = os.path.join(casepath,dm)
+                            parts = filepath.split(os.sep)
+                            new_filepath = os.path.join(*parts[2:])
+                            specialCaseList.append(new_filepath)
+                ScenarioForOneID = {
+                    "realDM": realDM,
+                    "ec2dDM": ec2dDM,
+                    "special": specialCaseList
+                }
+                dmPathList.append(ScenarioForOneID)
+            else:
+                pass
+        return dmPathList
+    
+
+    # Again just a copy with small changes from createRunningFile since Runtime restriction
+
     def createRunningFile(self,dirpath,X_set,numClients,numThreads,numRealDM,numIterations,name):
         fullList = []
         dmPathList = self.getDMpaths(dirpath)
@@ -133,6 +178,57 @@ class BatchQueue():
         output_path = os.path.join("data/runFiles",f"{name}.json")
         with open(output_path,"w") as f:
             rapidjson.dump(fullList,f,indent=4)
+
+   
+    
+    def createRunningFileOnlyID0(self,dirpath,X_set,numClients,numThreads,numRealDM,numIterations,name):
+        fullList = []
+        dmPathList = self.getDMpathsOnlyID0(dirpath)
+        inputs={
+            "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
+            "X_set":X_set, # Instead of debug boolean assign debug.vrp here
+            "numClients": numClients 
+            }
+        vrp_path = "data/Vrp-Set-X/X"
+        x_set_list = []
+        for file in os.listdir(vrp_path):
+            if file != "debug.vrp":
+                x_set_list.append(file)
+            else:
+                pass
+        
+        for case in dmPathList:
+            for vrpFile in x_set_list:
+                inputs["X_set"] = vrpFile
+
+                caseList = []
+                writeFile = {
+                "RealDM": "",
+                "Ec2DDM": "",
+                "inputs": inputs,
+                "numThreads": numThreads,
+                "numEc2D": numThreads-numRealDM,
+                "numRealDM": numRealDM,
+                "numIterations": numIterations 
+                }
+                writeFile["RealDM"] = case["realDM"]
+                writeFile["Ec2DDM"] = case["ec2dDM"]
+                caseList.append(copy.deepcopy(writeFile))
+
+                for dm in case["special"]:
+                    writeFile["RealDM"] = dm
+                    writeFile["Ec2DDM"] = dm
+                    caseList.append(copy.deepcopy(writeFile))
+                fullList.append(caseList)
+
+        
+        output_path = os.path.join("data/runFiles",f"{name}.json")
+        with open(output_path,"w") as f:
+            rapidjson.dump(fullList,f,indent=4)
+    
+
+
+
             
     def runRunningFile(self,name):
         runfilePath = os.path.join("data/runFiles", f"{name}.json")
@@ -192,6 +288,12 @@ class BatchQueue():
         return inputsHTMLList
     
 
+def print_distance_matrix_info(filepath):
+    with open(filepath, "r") as f:
+        data = json.load(f)
+        for obj in data:
+            for obj2 in obj:
+                print(obj2["RealDM"], obj2["Ec2DDM"], obj2["inputs"]["X_set"])
 
 
 
@@ -215,8 +317,9 @@ if __name__ == "__main__":
 
     bq = BatchQueue()
     # outputs to data/runFiles und given name
-    bq.createRunningFile("100x500MunichTest","debug",499,8,6,500,"500xSampleRun")
+    bq.createRunningFileOnlyID0("50x100MunichTest","placeholder",99,8,6,500,"50xSampleRunWithID0andAllX_sets")
     #bq.runRunningFile("200xSampleRun")
+    #print_distance_matrix_info("data/runFiles/50xSampleRunWithID0andAllX_sets.json")
 
 
     
