@@ -67,7 +67,7 @@ class Finder():
 if __name__ == "__main__":
     f = Finder("Utah_GroceryStores_1161x1161_RoadData.json","Utah_GroceryStores_1161x1161_EuclideanData.json")
     #f = Finder("Munich_DHL_10x10_RoadData.json","Munich_DHL_10x10_EuclideanData.json")
-    f.retBiggestDifferenceFile("UtahBigDifferences")
+    f.retBiggestDifferenceFile("UtahBigDifferencesUpdate")
 
 
 
