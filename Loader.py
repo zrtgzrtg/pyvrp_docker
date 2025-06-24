@@ -44,6 +44,8 @@ class Loader():
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/normalCase",idpath))
                 elif ("Real" not in idpath and "Ec2d" in idpath):
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/normalCase",idpath))
+                elif ("Percent" in idpath):
+                    os.rename(fullpath,os.path.join(zippath,f"{strID}/specialCases",idpath))
             shutil.move(mainDir,dirpath)
 
 

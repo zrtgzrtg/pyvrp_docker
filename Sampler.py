@@ -1,4 +1,5 @@
 
+from Finder import Finder
 import zipfile
 import json
 import rapidjson
@@ -20,6 +21,21 @@ class Sampler():
         self.specialDM = city_matrices[specialDM][0]
         self.idSet = idSet
         self.partnerSet = partnerSet
+        self.specialDMNames = {
+            3:  "Munich5PercentForRoad.json",
+            4:  "Munich10PercentForRoad.json",
+            5:  "Munich15PercentForRoad.json",
+            6:  "Munich20PercentForRoad.json",
+            7:  "Munich25PercentForRoad.json",
+            8:  "Munich30PercentForRoad.json",
+            9:  "Munich35PercentForRoad.json",
+            10: "Munich40PercentForRoad.json",
+            11: "Munich45PercentForRoad.json",
+            12: "Munich50PercentForRoad.json"
+        }
+
+
+
 
     def sampleXamountID(self,x):
         rng = np.random.default_rng()
@@ -37,6 +53,8 @@ class Sampler():
             s = Swapper(self.ec2dDM)
         elif(isRealDM==2):
             s = Swapper(self.specialDM)
+        elif(isRealDM in self.specialDMNames):
+            s = Swapper(self.specialDMNames[isRealDM])
         idSet = sample_set
         print(f"idSet {idSet}")
         return s.retAllEntriesForSubset(idSet)
@@ -183,6 +201,16 @@ class Sampler():
         print(self.partnerSet)
         print(self.specialDM)
 
+    def setupSampleAll3DMsWithFinder(self,numOfIDSwaps):
+        f = Finder(self.realDM,self.ec2dDM)
+        Ids,tuples = f.findBiggestDifference(numOfIDSwaps)
+        self.idSet = set(Ids)
+        self.partnerSet = self.findRenameForIDS(self.idSet)
+        print(self.idSet)
+        print(self.partnerSet)
+        print(self.specialDM)
+
+
     def sampleAll3DMs(self,id=None):
         dir = "samplerResDir"
         os.makedirs(dir,exist_ok=True)
@@ -191,7 +219,13 @@ class Sampler():
         if self.idSet == None or self.partnerSet == None or self.specialDM== None:
             raise AssertionError(f"generate necessary stuff first! specialDM = {self.specialDM}")
         
-        for x in range(3):
+        percent_labels = {
+        3: "5Percent", 4: "10Percent", 5: "15Percent", 6: "20Percent",
+        7: "25Percent", 8: "30Percent", 9: "35Percent", 10: "40Percent",
+        11: "45Percent", 12: "50Percent"
+        }
+        
+        for x in range(13):
             with open("samplerHelpDir/partnerIDS", "r") as f1:
                 partnerSet_str = json.load(f1)
                 sample_set_str = list(partnerSet_str.keys())
@@ -212,6 +246,8 @@ class Sampler():
                     name = f"{self.sampleSize+1}RealSampleMunich.json"
                 elif(x==2):
                     name = f"{self.sampleSize+1}Ec2dWithRealDepotSampleMunich.json"
+                elif x in percent_labels:
+                    name = f"{self.sampleSize+1}Munich{percent_labels[x]}ForRoad.json"
                 
 
                 self.saveXFile(UsableDM,dirpath,name)
@@ -266,6 +302,11 @@ if __name__ == "__main__":
     #    src = f"samplerResDir/{y}"
     #    dst = f"SamplesUSED/{y}"
     #    os.rename(src,dst)
+
+    
+    #s = Sampler("Munich1747",100,0,"test1")
+    #s.setupSampleAll3DMsWithFinder(10)
+
     for i in range(150):
         x = 399
         y = f"{x+1}MunichSampleDMS_ID{i}"

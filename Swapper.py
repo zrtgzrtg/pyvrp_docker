@@ -1,4 +1,5 @@
 
+from Finder import Finder
 import rapidjson
 import os
 
@@ -86,6 +87,10 @@ class Swapper():
         realDMDestination = self.findEntriesByDestinationID(OriginID,1)
         ec2dDMOrigin = self.findEntriesByOriginID(OriginID,2)
         ec2dDMDestination = self.findEntriesByDestinationID(OriginID,2)
+
+        print(realDMOrigin)
+        print(ec2dDMDestination)
+
         
         swapDict = {}
 
@@ -104,9 +109,11 @@ class Swapper():
         return swapDict
     
     def fillSwapResult(self,OriginID):
-        with open(self.path2,"r") as f:
-            self.swapResult = rapidjson.load(f)
+        if self.swapResult == "NOT ASSIGNED YET":
+            with open(self.path2,"r") as f:
+                self.swapResult = rapidjson.load(f)
         swapDict = self.swapDistancesREALEC2DforEntry(OriginID)
+        print(swapDict)
         self.writeEntries(swapDict)
     
     def writeEntries(self,swapDict):
@@ -124,7 +131,34 @@ class Swapper():
         self.importMatrix(2)
         self.fillSwapResult(OriginID)
         self.writeToFile(name)
+
+
+    # Addition with the Finder class
+    def findSwapIds(self,numSwaps):
+        f = Finder(os.path.basename(self.path1),os.path.basename(self.path2))
+        ids,tuples = f.findBiggestDifference(numSwaps)
+        idsInt = []
+        for id in ids:
+            idsInt.append(int(id))
+        return idsInt
+
+
+    def fullSwapFileList(self,numSwaps,name):
+        self.importMatrix(1)
+        self.importMatrix(2)
+        idList = self.findSwapIds(numSwaps)
+        for id in idList :
+            print(id)
+            self.fillSwapResult(id)
+        self.writeToFile(name)
+        return idList
     
+    def testIdListSwapFile(self,idList,name):
+        for id in idList:
+            self.testSwapFile(id,name)
+
+    
+
     def retAllEntriesForSubset(self,IDSet):
         self.importMatrix()
         # print(self.findALLEntriesByID(ID))
@@ -160,8 +194,37 @@ class Swapper():
 
 
 
+
 if __name__ == "__main__":
-    s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
-    name = "Munich_Full_Ec2d_Depot"
-    s.fullSwapFile(1,name)
-    s.testSwapFile(1,name)
+    #s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
+    #name = "Munich_Full_Ec2d_Depot"
+    #s.fullSwapFile(1,name)
+    #s.testSwapFile(1,name)
+
+    #s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
+    #name = "Munich_Full_Ec2d_Depot"
+    #s.fullSwapFile(1,name)
+    #s.testSwapFile(1,name)
+
+    #With Finder class now
+
+    numSwapList = [
+    ("5Percent", 87),
+    ("10Percent", 174),
+    ("15Percent", 261),
+    ("20Percent", 348),
+    ("25Percent", 435),
+    ("30Percent", 522),
+    ("35Percent", 609),
+    ("40Percent", 696),
+    ("45Percent", 783),
+    ("50Percent", 870)
+]
+
+    for entry in numSwapList:
+        #s = Swapper("Munich_DHL_10x10_RoadData","Munich_DHL_10x10_EuclideanData")
+        s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
+        name = f"Munich{entry[0]}ForRoad"
+        idList = s.fullSwapFileList(entry[1],name)
+    #s.testIdListSwapFile(idList,name)
+

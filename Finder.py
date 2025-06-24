@@ -36,7 +36,6 @@ class Finder():
         tuple3List = []
         realDM,eucDM = self.importMatrices()
         for objE in eucDM:
-            print(objE)
             res = (objE[0],objE[1],(realDM[objE]-eucDM[objE]))
             tuple3List.append(res)
         
@@ -48,6 +47,31 @@ class Finder():
             writer = csv.writer(f)
             writer.writerow(["OriginID", "DestinationID", "Difference"]) 
             writer.writerows(sorted_data)
+        
+        return sorted_data
+    
+    def findBiggestDifference(self,numIDs):
+        sortedList = self.retBiggestDifferenceFile("tmp")
+        combinedDiffDict = {}
+        for entry in sortedList:
+            if f"{entry[0]}" not in combinedDiffDict:
+                combinedDiffDict[f"{entry[0]}"] = 0
+            combinedDiffDict[f"{entry[0]}"] += entry[2]
+        tuple_list = list(combinedDiffDict.items())
+        sorted_tuple_list = sorted(tuple_list, key=lambda x: x[1], reverse=True)
+
+        retList = []
+        retListIDs = []
+        for i in range(numIDs):
+            retList.append(sorted_tuple_list[i])
+            retListIDs.append(sorted_tuple_list[i][0])
+        
+
+        return retListIDs,retList
+
+        
+        
+
 
         # test for symmetry. All our dms are symmetrical
         #for entry in eucDM.keys():
@@ -67,7 +91,8 @@ class Finder():
 if __name__ == "__main__":
     f = Finder("Utah_GroceryStores_1161x1161_RoadData.json","Utah_GroceryStores_1161x1161_EuclideanData.json")
     #f = Finder("Munich_DHL_10x10_RoadData.json","Munich_DHL_10x10_EuclideanData.json")
-    f.retBiggestDifferenceFile("UtahBigDifferencesUpdate")
+    #f.retBiggestDifferenceFile("UtahBigDifferencesUpdate")
+    f.findBiggestDifference(500)
 
 
 
