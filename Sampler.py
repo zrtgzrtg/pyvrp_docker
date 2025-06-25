@@ -22,16 +22,16 @@ class Sampler():
         self.idSet = idSet
         self.partnerSet = partnerSet
         self.specialDMNames = {
-            3:  "Munich5PercentForRoad.json",
-            4:  "Munich10PercentForRoad.json",
-            5:  "Munich15PercentForRoad.json",
-            6:  "Munich20PercentForRoad.json",
-            7:  "Munich25PercentForRoad.json",
-            8:  "Munich30PercentForRoad.json",
-            9:  "Munich35PercentForRoad.json",
-            10: "Munich40PercentForRoad.json",
-            11: "Munich45PercentForRoad.json",
-            12: "Munich50PercentForRoad.json"
+            3:   "Munich5PercentForRoad",
+            4:  "Munich10PercentForRoad",
+            5:  "Munich15PercentForRoad",
+            6:  "Munich20PercentForRoad",
+            7:  "Munich25PercentForRoad",
+            8:  "Munich30PercentForRoad",
+            9:  "Munich35PercentForRoad",
+            10: "Munich40PercentForRoad",
+            11: "Munich45PercentForRoad",
+            12: "Munich50PercentForRoad"
         }
 
 
@@ -55,6 +55,8 @@ class Sampler():
             s = Swapper(self.specialDM)
         elif(isRealDM in self.specialDMNames):
             s = Swapper(self.specialDMNames[isRealDM])
+        elif(isRealDM==13):
+            s = Swapper(self.ec2dDM)
         idSet = sample_set
         print(f"idSet {idSet}")
         return s.retAllEntriesForSubset(idSet)
@@ -97,6 +99,7 @@ class Sampler():
         idSet.add(1)
         # converting numpy ints into normal json serializable ints
         #renameDict = {int(k): int(v) for k, v in renameDict.items()}
+        os.makedirs("samplerHelpDir",exist_ok=True)
 
         with open("samplerHelpDir/partnerIDS","w") as f:
             json.dump(renameDict,f,indent=4)
@@ -225,7 +228,7 @@ class Sampler():
         11: "45Percent", 12: "50Percent"
         }
         
-        for x in range(13):
+        for x in range(14):
             with open("samplerHelpDir/partnerIDS", "r") as f1:
                 partnerSet_str = json.load(f1)
                 sample_set_str = list(partnerSet_str.keys())
@@ -248,6 +251,9 @@ class Sampler():
                     name = f"{self.sampleSize+1}Ec2dWithRealDepotSampleMunich.json"
                 elif x in percent_labels:
                     name = f"{self.sampleSize+1}Munich{percent_labels[x]}ForRoad.json"
+                elif(x==13):
+                    name = f"{self.sampleSize+1}Ec2dSampleMunichSpecial.json"
+
                 
 
                 self.saveXFile(UsableDM,dirpath,name)
@@ -307,8 +313,8 @@ if __name__ == "__main__":
     #s = Sampler("Munich1747",100,0,"test1")
     #s.setupSampleAll3DMsWithFinder(10)
 
-    for i in range(150):
-        x = 399
+    for i in range(100):
+        x = 99
         y = f"{x+1}MunichSampleDMS_ID{i}"
 
         s = Sampler("Munich1747",x,0,y,"Munich1747Ec2dRealDepot")
@@ -316,8 +322,9 @@ if __name__ == "__main__":
         s.sampleAll3DMs(i)
         os.makedirs("SamplesUSED",exist_ok=True)
         src = f"samplerResDir/{y}"
-        os.makedirs("SamplesUSED/150x400MunichSamples",exist_ok=True)
-        dst = f"SamplesUSED/150x400MunichSamples/{y}"
+        name = "100x100MunichWithPercent"
+        os.makedirs(f"SamplesUSED/{name}",exist_ok=True)
+        dst = f"SamplesUSED/{name}/{y}"
         os.rename(src,dst)
 
     

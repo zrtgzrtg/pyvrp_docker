@@ -42,9 +42,9 @@ class Loader():
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/specialCases",idpath))
                 elif ("Real" in idpath and "Ec2d" not in idpath):
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/normalCase",idpath))
-                elif ("Real" not in idpath and "Ec2d" in idpath):
+                elif ("Real" not in idpath and "Ec2d" in idpath and "Special" not in idpath):
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/normalCase",idpath))
-                elif ("Percent" in idpath):
+                elif ("Percent" in idpath or "Special" in idpath):
                     os.rename(fullpath,os.path.join(zippath,f"{strID}/specialCases",idpath))
             shutil.move(mainDir,dirpath)
 
@@ -54,6 +54,6 @@ class Loader():
 
 
 if __name__=="__main__":
-    l = Loader("SamplesUSED/100x500MunichSamples")
+    l = Loader("SamplesUSED/100x100MunichWithPercent")
     l.findAndExtractFiles()
-    l.createEntryInDistance_Matrices("100x500MunichTest")
+    l.createEntryInDistance_Matrices("100x100MunichWithPercent")

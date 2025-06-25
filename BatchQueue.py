@@ -148,12 +148,14 @@ class BatchQueue():
     def createRunningFile(self,dirpath,X_set,numClients,numThreads,numRealDM,numIterations,name):
         fullList = []
         dmPathList = self.getDMpaths(dirpath)
+        print(dmPathList)
         inputs={
             "dm":"placeholder", # THIS IS NOT USED ANYMORE!!!! DONT DELETE IT THO
             "X_set":X_set, # Instead of debug boolean assign debug.vrp here
             "numClients": numClients 
             }
         for case in dmPathList:
+            print(case)
             caseList = []
             writeFile = {
             "RealDM": "",
@@ -175,6 +177,7 @@ class BatchQueue():
             fullList.append(caseList)
 
         
+        os.makedirs("data/runFiles",exist_ok=True)
         output_path = os.path.join("data/runFiles",f"{name}.json")
         with open(output_path,"w") as f:
             rapidjson.dump(fullList,f,indent=4)
@@ -317,8 +320,9 @@ if __name__ == "__main__":
 
     bq = BatchQueue()
     # outputs to data/runFiles und given name
-    bq.createRunningFileOnlyID0("50x100MunichTest","placeholder",99,8,6,500,"50xSampleRunWithID0andAllX_sets")
-    #bq.runRunningFile("200xSampleRun")
+    #bq.createRunningFileOnlyID0("50x100MunichTest","placeholder",99,8,6,500,"50xSampleRunWithID0andAllX_sets")
+    bq.createRunningFile("3x100MunichWithPercent","debug",99,8,8,500,"3x100MunichWithPercent")
+    #bq.runRunningFile()
     #print_distance_matrix_info("data/runFiles/50xSampleRunWithID0andAllX_sets.json")
 
 
