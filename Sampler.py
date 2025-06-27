@@ -33,6 +33,7 @@ class Sampler():
             11: "Munich45PercentForRoad",
             12: "Munich50PercentForRoad"
         }
+        self.swapperDict = {}
 
 
 
@@ -47,16 +48,20 @@ class Sampler():
         return sampled_ids_set
     
     def findAllEntriesFromSampledID(self,sample_set,isRealDM):
-        if isRealDM == 1:
-            s = Swapper(self.realDM)
-        elif (isRealDM==0):
-            s = Swapper(self.ec2dDM)
-        elif(isRealDM==2):
-            s = Swapper(self.specialDM)
-        elif(isRealDM in self.specialDMNames):
-            s = Swapper(self.specialDMNames[isRealDM])
-        elif(isRealDM==13):
-            s = Swapper(self.ec2dDM)
+        if self.swapperDict.get(isRealDM):
+            s = self.swapperDict[isRealDM]
+        else:
+            if isRealDM == 1:
+                s = Swapper(self.realDM)
+            elif (isRealDM==0):
+                s = Swapper(self.ec2dDM)
+            elif(isRealDM==2):
+                s = Swapper(self.specialDM)
+            elif(isRealDM in self.specialDMNames):
+                s = Swapper(self.specialDMNames[isRealDM])
+            elif(isRealDM==13):
+                s = Swapper(self.ec2dDM)
+            self.swapperDict[isRealDM] = s
         idSet = sample_set
         print(f"idSet {idSet}")
         return s.retAllEntriesForSubset(idSet)
@@ -314,7 +319,7 @@ if __name__ == "__main__":
     #s.setupSampleAll3DMsWithFinder(10)
 
     for i in range(100):
-        x = 99
+        x = 199
         y = f"{x+1}MunichSampleDMS_ID{i}"
 
         s = Sampler("Munich1747",x,0,y,"Munich1747Ec2dRealDepot")
@@ -322,7 +327,7 @@ if __name__ == "__main__":
         s.sampleAll3DMs(i)
         os.makedirs("SamplesUSED",exist_ok=True)
         src = f"samplerResDir/{y}"
-        name = "100x100MunichWithPercent"
+        name = "100x200MunichWithPercent"
         os.makedirs(f"SamplesUSED/{name}",exist_ok=True)
         dst = f"SamplesUSED/{name}/{y}"
         os.rename(src,dst)
