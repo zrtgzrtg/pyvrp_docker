@@ -33,3 +33,6 @@ transformerInputDir
 transformerInputDir/
 Thomas_Project/
 Thomas_Projekt/
+*.tar.xz
+circuity_factor_dir/
+scannerInputDir/

@@ -88,8 +88,6 @@ class Swapper():
         ec2dDMOrigin = self.findEntriesByOriginID(OriginID,2)
         ec2dDMDestination = self.findEntriesByDestinationID(OriginID,2)
 
-        print(realDMOrigin)
-        print(ec2dDMDestination)
 
         
         swapDict = {}
@@ -113,7 +111,6 @@ class Swapper():
             with open(self.path2,"r") as f:
                 self.swapResult = rapidjson.load(f)
         swapDict = self.swapDistancesREALEC2DforEntry(OriginID)
-        print(swapDict)
         self.writeEntries(swapDict)
     
     def writeEntries(self,swapDict):
@@ -148,7 +145,6 @@ class Swapper():
         self.importMatrix(2)
         idList = self.findSwapIds(numSwaps)
         for id in idList :
-            print(id)
             self.fillSwapResult(id)
         self.writeToFile(name)
         return idList
@@ -220,11 +216,19 @@ if __name__ == "__main__":
     ("45Percent", 783),
     ("50Percent", 870)
 ]
+    numSwapList1 = [
+        ("5Percent", 1),
+        ("10Percent",2),
+        ("15Percent",3),
+        ("20Percent",4),
+    ]
 
-    for entry in numSwapList:
-        #s = Swapper("Munich_DHL_10x10_RoadData","Munich_DHL_10x10_EuclideanData")
-        s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
+
+    for entry in numSwapList1:
+        s = Swapper("Munich_DHL_10x10_RoadData","Munich_DHL_10x10_EuclideanData")
+        #s = Swapper("Munich_DHL_1747x1747_RoadData","Munich_DHL_1747x1747_EuclideanData")
         name = f"Munich{entry[0]}ForRoad"
         idList = s.fullSwapFileList(entry[1],name)
+        print(idList)
     #s.testIdListSwapFile(idList,name)
 

@@ -321,8 +321,8 @@ if __name__ == "__main__":
     bq = BatchQueue()
     # outputs to data/runFiles und given name
     #bq.createRunningFileOnlyID0("50x100MunichTest","placeholder",99,8,6,500,"50xSampleRunWithID0andAllX_sets")
-    bq.createRunningFile("3x100MunichWithPercent","debug",99,8,8,500,"3x100MunichWithPercent")
-    #bq.runRunningFile()
+    #bq.createRunningFile("3x100MunichWithPercent","debug",99,8,8,500,"3x100MunichWithPercent")
+    bq.runRunningFile("100x100MunichWithPercentDebug")
     #print_distance_matrix_info("data/runFiles/50xSampleRunWithID0andAllX_sets.json")
 
 
