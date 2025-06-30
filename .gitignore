@@ -36,3 +36,10 @@ Thomas_Projekt/
 *.tar.xz
 circuity_factor_dir/
 scannerInputDir/
+Thomas Projekt/
+'Thomas Projekt'/
+tester/*.csv
+tester/allCsv/2col/*.csv
+tester/allCsv/4col/*.csv
+tester/allCsv/*.csv
+tester/allCsv/2col/percentCase/*.csv
