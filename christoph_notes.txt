@@ -1,6 +1,0 @@
-1. Hardcoded implementation of number of vehicles in problemData builder
---> pyvrp doesnt limit amout of vehicles, probably a problem in implementation
-2. Implement visualization for real world roads^
-
-Optimal Runtime for 1 cvrp: 10*N Iterations
-Good results after 10+ seeds

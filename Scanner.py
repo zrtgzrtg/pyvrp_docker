@@ -18,7 +18,6 @@ class Scanner():
         with open(path, newline='') as csvfile:
             reader = csv.reader(csvfile)
             return list(reader)
-    def addX_setColumn(self):
 
     
     def convertToDict(self):

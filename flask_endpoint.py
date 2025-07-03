@@ -206,5 +206,7 @@ def running():
 if __name__ == "__main__":
     # normal version
     app.run(host="0.0.0.0", port=80,debug=True, use_reloader=False)
+
+    #for localhost without port exposing
     #app.run(debug=True)
 
