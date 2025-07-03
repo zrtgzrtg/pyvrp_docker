@@ -19,15 +19,16 @@ Use the debug.vrp file in data/Vrp-Set-X/X/debug.vrp for custom demand scenarios
 - pip install -r requirements.txt
 - gcloud cli for remote deployment
 - Custom distance matrices in json format like data/distance_matrices/Chicago_100x100_RoadData.json
+- Docker Desktop/Docker cli
 
 ### Local Deployment
-- The flask_endpoint.py launches a webserver with exposed ports --> Not recommended on local pc
+- The flask_endpoint.py launches a webserver with exposed ports --> Not recommended on local machine
 - Can be adapted in the build_upload.sh and flask_endpoint.py for different behavior
 
 
 ### Build and Launch (Linux)
 
-Normal GCP c4a-highcpu-8 launch (any c4a instance will dow)
+Normal GCP c4a-highcpu-8 launch (any c4a instance will do)
 
 Requires: gcloud-cli with running vm instance (can be started in 4core/8core version using 4coreStart.sh or 8coreStart.sh)
 
@@ -42,7 +43,21 @@ chmod +x build_upload.sh
 
 # SSH into GCP VM
 gcloud compute ssh chosen-VM-Name --zone=chosen-VM-zone
+# in SSH session to enter filesystem of docker container
+docker exec -it containerID /bin/bash
 ```
+```bash
+# During SSH 
+# Copy out of docker container
+docker cp containerID:/app/BatchCustom pathToCopyLoc(or BatchDir)
+# Copy out of GCP
+gcloud compute scp --recurse vmName:~/pathToDir pathToCopyLoc
+```
+
+# Logs
+
+- logs for each process in runLogs/solver_{ID}.log
+- batchprogress.log or progress.log as main log files
 
 # Importing distance matrices
 
@@ -74,5 +89,15 @@ gcloud compute ssh chosen-VM-Name --zone=chosen-VM-zone
 - R_Project/ -- R code to generate graphs for csv files generated from arcpy shapefile results
 - Grapher.py -- generate graphs manually by providing pyvrp.Result objects (only of statistics are collected from the solve)
 - circtuiy.py -- introductory implementation to multiply all IDs of a DM by a given circuity factor file --> Needs to be adapted to only multiply certain results for sensible outputs
+
+# Warning
+
+- including or generating too many different distance matrices severly slows down docker build speeds and also uses a lot of disk space to cache build process
+- limit data/distance_matrices directory to a max 5-10gb by deleting unused distance_matrices
+- hardcoded paths in this code are common --> Changing filenames or paths can be problematic
+- c4a instaces are of ARM architecture --> If building on a x86 system use another VM type
+- huge manual runs with multiple processes collect a lot of statistics --> results json files grow lineraly with total amount of iterations performed -- It might be sensible to turn of statistics in the code for manual runs aswell if running 16+ solves with over 10k-20k iterations (default for Batch solves using BatchQueue.py)
+
+
 
 
