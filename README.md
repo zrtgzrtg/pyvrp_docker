@@ -96,7 +96,7 @@ gcloud compute scp --recurse vmName:~/pathToDir pathToCopyLoc
 - limit data/distance_matrices directory to a max 5-10gb by deleting unused distance_matrices
 - hardcoded paths in this code are common --> Changing filenames or paths can be problematic
 - c4a instaces are of ARM architecture --> If building on a x86 system use another VM type
-- huge manual runs with multiple processes collect a lot of statistics --> results json files grow lineraly with total amount of iterations performed -- It might be sensible to turn of statistics in the code for manual runs aswell if running 16+ solves with over 10k-20k iterations (default for Batch solves using BatchQueue.py)
+- huge manual runs (runs not using a runFile) with multiple processes collect a lot of statistics --> results json filesize grows lineraly with total amount of iterations performed -- It might be sensible to turn of statistics in the code for manual runs aswell if running 16+ solves with over 10k-20k iterations (default for Batch solves using BatchQueue.py)
 
 
 

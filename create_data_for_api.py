@@ -54,7 +54,8 @@ class DataCreator():
             "seed":self.seed,
             "isFeasible":self.res.best.is_feasible(),
             "CapacityUsed": capa,
-            "demandsUsed": demandList
+            "demandsUsed": demandList,
+            "distance": self.res.distance()
         }
 
         
@@ -86,7 +87,7 @@ class DataCreator():
                     route_list.append(client.idx)
                 else:
                     raise TypeError(
-                        f"❌ routes[{i}][{j}] = {client} (type {type(client)}) is neither int nor has .idx"
+                        f"routes[{i}][{j}] = {client} (type {type(client)}) is neither int nor has .idx"
                     )
 
             normalized_routes.append(route_list)
