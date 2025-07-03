@@ -40,10 +40,10 @@ tester/allCsv/2col/*.csv
 tester/allCsv/4col/*.csv
 tester/allCsv/*.csv
 tester/allCsv/2col/percentCase/*.csv
-Thomas Projekt/**
-!Thomas Projekt/
-!Thomas Projekt/**/
-!Thomas Projekt/**/*.R
-!Thomas Projekt/**/*.py
-Thomas Projekt/**/*.csv
-Thomas Projekt/**/*.png
+R_Project/**
+!R_Project/
+!R_Project/**/
+!R_Project/**/*.R
+!R_Project/**/*.py
+R_Project/**/*.csv
+R_Project/**/*.png
