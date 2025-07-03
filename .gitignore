@@ -1,4 +1,5 @@
 __pycache__/
+
 .venv
 /X-*
 Output_from_docker/
@@ -31,15 +32,18 @@ SamplesUSED.zip
 finderResDir/
 transformerInputDir
 transformerInputDir/
-Thomas_Project/
-Thomas_Projekt/
 *.tar.xz
 circuity_factor_dir/
 scannerInputDir/
-Thomas Projekt/
-'Thomas Projekt'/
 tester/*.csv
 tester/allCsv/2col/*.csv
 tester/allCsv/4col/*.csv
 tester/allCsv/*.csv
 tester/allCsv/2col/percentCase/*.csv
+Thomas Projekt/**
+!Thomas Projekt/
+!Thomas Projekt/**/
+!Thomas Projekt/**/*.R
+!Thomas Projekt/**/*.py
+Thomas Projekt/**/*.csv
+Thomas Projekt/**/*.png
