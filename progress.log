@@ -2,4 +2,23 @@ sh: 1: python: not found
 Reached if-statement with (getResDict()) END
 Reached if-statement with (getResDict()) END
 Reached if-statement with (getResDict()) END
-Form received with 1500Creating the inputsHTML now!Form received with 500Creating the inputsHTML now!Form received with 1500Creating the inputsHTML now!Form received with 1500Creating the inputsHTML now!
+Form received with 1500Creating the inputsHTML now!Form received with 500Creating the inputsHTML now!Form received with 1500Creating the inputsHTML now!Form received with 1500Creating the inputsHTML now!Reached if-statement with (getResDict()) END
+Zip Exists! Serving Download now!Deleted old Resdict. Now can rerun succesfullyReached if-statement with (getResDict()) END
+Zip doesnt Exist yet. Serve Wait page!Reached if-statement with (getResDict()) END
+Zip doesnt Exist yet. Serve Wait page!Traceback (most recent call last):
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/BatchQueue.py", line 325, in <module>
+    bq.runRunningFile("100x100MunichWithPercentDebug")
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/BatchQueue.py", line 244, in runRunningFile
+    self.startJob(inputList)
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/BatchQueue.py", line 31, in startJob
+    p.wait()
+  File "/usr/lib/python3.11/subprocess.py", line 1262, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 1997, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 1955, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

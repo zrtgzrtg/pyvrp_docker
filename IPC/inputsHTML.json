@@ -1,0 +1,11 @@
+{
+    "numIterations": 1500,
+    "city": "Chicago100",
+    "vrp-file": "novrp-file",
+    "numClients": 99,
+    "numThreads": 8,
+    "numRealDM": 7,
+    "numEc2D": 1,
+    "debugCapacity": -1,
+    "isDebugRun": false
+}

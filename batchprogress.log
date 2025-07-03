@@ -1,13 +1,29 @@
 RealDM process with ID: 1 created! 
 
-Ec2D process with ID: 2 created!
+RealDM process with ID: 2 created! 
 
 RealDM process with ID: 3 created! 
 
 RealDM process with ID: 4 created! 
 
-Process with has finished!
-Process with has finished!
-Process with has finished!
-Process with has finished!
-task_queue fill function ran!
+RealDM process with ID: 5 created! 
+
+RealDM process with ID: 6 created! 
+
+RealDM process with ID: 7 created! 
+
+RealDM process with ID: 8 created! 
+
+Traceback (most recent call last):
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/distmainBatch.py", line 24, in <module>
+    run(realDM,Ec2DDM,inputs,numThreads,numEc2D,numRealDM,numIterations)
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/distmainBatch.py", line 11, in run
+    subprocessstarter.doEverything()
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/Process_Starter.py", line 88, in doEverything
+    self.fill_TaskQueue()
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/Process_Starter.py", line 47, in fill_TaskQueue
+    i = taskQueue.startTaskQueue()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/thomas4stank/project_studies/pyvrp_test_git/pyvrp_docker/TaskQueue.py", line 44, in startTaskQueue
+    time.sleep(0.5)
+KeyboardInterrupt
