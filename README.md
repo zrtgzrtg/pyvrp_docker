@@ -16,10 +16,14 @@ Use the debug.vrp file in data/Vrp-Set-X/X/debug.vrp for custom demand scenarios
 ### ⚙️Prerequisites
 
 - pip/python
-- pip install -r requirements.txt
 - gcloud cli for remote deployment
 - Custom distance matrices in json format like data/distance_matrices/Chicago_100x100_RoadData.json
 - Docker Desktop/Docker cli
+- Install requirements with:
+```bash
+pip install -r requirements.txt
+```
+
 
 ### Local Deployment
 - The flask_endpoint.py launches a webserver with exposed ports --> Not recommended on local machine
